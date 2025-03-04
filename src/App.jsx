@@ -1,24 +1,26 @@
-export default function Navbar() {
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import Catalog from "./pages/Catalog";
+import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
+import Login from "./pages/Login";
+import Registration from "./pages/Registration";
+
+const App = () => {
   return (
-    <nav className="bg-white shadow-md p-4 flex items-center justify-between rounded-full m-4 fixed left-4 right-4 top-4 px-6">
-      {/* Logo */}
-      <div className="text-xl font-bold text-gray-800 px-4">LOGO</div>
-      
-      {/* Search */}
-      <div className="flex-1 mx-4">
-        <input
-          type="text"
-          placeholder="Search..."
-          className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-      
-      {/* Buttons */}
-      <div className="flex space-x-4 px-4">
-        <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Button 1</button>
-        <button className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">Button 2</button>
-        <button className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">Button 3</button>
-      </div>
-    </nav>
+    <Router>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/catalog" element={<Catalog />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/registration" element={<Registration />} />
+      </Routes>
+    </Router>
   );
-}
+};
+
+export default App;
