@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'Blinky Star';
-  src: url('/fonts/BlinkyStar.otf') format('truetype');
+  font-family: 'Blinky-Star';
+  src: url('/fonts/BlinkyStar.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
 }

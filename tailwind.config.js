@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        blinky: ["Blinky Star", "sans-serif"],
+        blinky: ["Blinky-Star", "sans-serif"],
       },
     },
   },
