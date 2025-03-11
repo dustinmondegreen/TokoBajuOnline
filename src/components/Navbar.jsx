@@ -1,27 +1,26 @@
 import { Link } from "react-router-dom";
-import { FaShoppingCart, FaUser } from "react-icons/fa";
+import { FaShoppingCart } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
+
 
 const Navbar = () => {
   return (
-    <nav className="bg-[#151523] shadow-lg py-3 px-10 flex items-center justify-between 
-                rounded-full mx-24 mt-5 backdrop-blur-md border border-gray-700">
-      {/* Logo di kiri */}
+    <nav className="bg-[#151523] shadow-lg py-3 px-10 flex items-center justify-between rounded-full mx-24 mt-5 backdrop-blur-md border border-gray-700">
       <div className="flex items-center">
       <Link to="/">
         <img src="/Logo CLOVIO.svg" alt="Logo CLOVIO" className="h-10 w-auto" />
       </Link>
       </div>
 
-      {/* Search di tengah */}
-      <div className="flex-1 mx-32">
+      <div className="flex-1 mx-64 relative">
+      <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#151523]" size={20} />
         <input
           type="text"
           placeholder="Search..."
-          className="w-full p-2 px-10 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-full p-2 pl-12 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
       </div>
 
-      {/* Cart dan Sign Up di kanan */}
       <div className="flex items-center space-x-4">
         <Link to="/cart" className="text-gray-700 hover:text-blue-500">
           <FaShoppingCart size={22} className="text-[#FFF8E8]"/>
