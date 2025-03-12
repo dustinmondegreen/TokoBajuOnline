@@ -6,9 +6,11 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Login from "./pages/Login";
 import Registration from "./pages/Registration";
+import Footer from "./components/Footer"
 
 const App = () => {
   return (
+    <>
     <Router>
       {/* <Navbar /> */}
       <Routes>
@@ -20,6 +22,8 @@ const App = () => {
         <Route path="/registration" element={<Registration />} />
       </Routes>
     </Router>
+    <Footer></Footer>
+    </>
   );
 };
 
