@@ -1,0 +1,49 @@
+# Laravel & PHP
+/vendor
+/node_modules
+/public/storage
+/storage/*.key
+/storage/framework/*
+/storage/logs/*
+/storage/app/public/*
+/bootstrap/cache/*
+.env
+.env.*.local
+Homestead.yaml
+Homestead.json
+.idea
+.phpunit.result.cache
+.phpstorm.meta.php
+/public/hot
+/public/storage
+/public/mix-manifest.json
+/public/js/*.map
+/public/css/*.map
+/public/build
+/.vscode/
+/*.log
+*.sqlite
+.DS_Store
+Thumbs.db
+
+# Composer & NPM/Yarn
+composer.lock
+yarn.lock
+package-lock.json
+
+# Laravel IDE Helper
+/_ide_helper.php
+/_ide_helper_models.php
+
+# Cache & Temp
+/.phpunit.cache
+/.env
+/.phpunit.result.cache
+/storage/oauth-private.key
+/storage/oauth-public.key
+
+# System Files
+*.bak
+*.swp
+*.swo
+*.tmp
