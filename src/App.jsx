@@ -8,11 +8,13 @@ import Login from "./pages/Login";
 import Registration from "./pages/Registration";
 import Footer from "./components/Footer"
 
+
+
 const App = () => {
   return (
     <>
     <Router>
-      {/* <Navbar /> */}
+      {Navbar()}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/catalog" element={<Catalog />} />
