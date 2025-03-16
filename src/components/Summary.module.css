@@ -1,0 +1,58 @@
+.summaryContainer {
+    background-color: #0f0f1a;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 300px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .details {
+    text-align: left;
+    margin-bottom: 20px;
+  }
+  
+  .row {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+  }
+  
+  .divider {
+    border: 0;
+    border-top: 1px solid white;
+    margin: 10px 0;
+  }
+  
+  .total {
+    font-weight: bold;
+  }
+  
+  .checkoutButton {
+    background-color: #f8f8f8;
+    color: black;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    width: 100%;
+  }
+  
+  .checkoutButton:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .helpText {
+    font-size: 0.8rem;
+    margin-top: 10px;
+  }
+  
