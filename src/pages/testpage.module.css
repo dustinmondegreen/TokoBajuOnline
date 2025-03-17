@@ -1,35 +1,51 @@
 body{
-    background-color: #fdf6e3;
+  background-color: FFF8E8;
 }
 
-.parentContainer {
-    display: flex;
-    width: 1400px;
-    margin: 0 auto;
-    padding: 50px;
-    background-color: #fdf6e3;
-  }
-  
-  .cart {
-    flex-grow: 2;
-  }
-  
-  .title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  
-  .headerRow {
-    display: flex;
-    justify-content: space-between;
-    font-weight: bold;
-    border-bottom: 2px solid black;
-    padding-bottom: 5px;
-    margin-bottom: 10px;
-  }
-  
-  .summaryContainer {
-    flex-grow: 1;
-  }
-  
+.mainContainer{
+  display: flex;
+  flex-direction: row;
+  width: 1200px;
+  margin: 25px auto;
+  gap: 30px;
+}
+
+.itemSection{
+  display: flex;
+  flex-grow: 3;
+  flex-direction: column;
+  color: black;
+  padding: 25px;
+}
+
+.summaryContainer{
+  flex-grow: 1;
+}
+
+.headerContainer{
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.headerContainer h3{
+  text-align: left;
+  font-size: 50px;
+}
+
+.headerDescription{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px 10px;
+  border: 1px solid black;
+  border-left: 0;
+  border-right: 0;
+  flex-grow: 1;
+  font-size: 20px;
+}
+
+.itemListContainer{
+  flex-grow: 10;
+}
+

@@ -1,58 +1,59 @@
-.summaryContainer {
-    background-color: #0f0f1a;
-    color: white;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 300px;
-    text-align: center;
-    font-family: Arial, sans-serif;
-  }
-  
-  .title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  
-  .details {
-    text-align: left;
-    margin-bottom: 20px;
-  }
-  
-  .row {
-    display: flex;
-    justify-content: space-between;
-    margin: 5px 0;
-  }
-  
-  .divider {
-    border: 0;
-    border-top: 1px solid white;
-    margin: 10px 0;
-  }
-  
-  .total {
-    font-weight: bold;
-  }
-  
-  .checkoutButton {
-    background-color: #f8f8f8;
-    color: black;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: bold;
-    width: 100%;
-  }
-  
-  .checkoutButton:hover {
-    background-color: #e0e0e0;
-  }
-  
-  .helpText {
-    font-size: 0.8rem;
-    margin-top: 10px;
-  }
-  
+body{
+  text-align: center;
+  color: white; 
+}
+
+.parentContainer{
+  display: flex;
+  flex-direction: column;
+  background-color: #151523;
+  height: 700px;
+  border-radius: 20px;
+  padding: 40px 50px;
+  margin-top: 50px;
+}
+
+.headerContainer{
+  flex-grow: 0;
+}
+
+.headerContainer h3{
+  font-size: 50px;
+}
+
+.priceListing{
+  margin-top: 40px;
+  flex-grow: 0;
+}
+
+.buttonContainer{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.buttonContainer button{
+  background-color: #FFF8E8;
+  color: #151523;
+  font-size: 50px;
+  border-radius: 20px;
+}
+
+.helpContainer{
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+}
+
+.helpContainer p{
+  align-self: flex-end;
+}
+
+.detailContainer{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px 0;
+}
