@@ -1,18 +1,31 @@
 import React from 'react';
 
 const Hero = () => {
+
+    const images = [
+        "/Hero1.png",
+        "/Hero2.png",
+        "/Hero4.png",
+        "/Hero3.png",
+    ];
+
     return (
-        <selection className="hero">
-            <div className="bg-[#FFF8E8] h-[90vh] flex items-center justify-center">
-                <div className="text-center text-white">
-                    <h1 className="text-4xl font-bold">Welcome to TokoBaju</h1>
-                    <div>
-                        <p className="mt-3">The best place to find your favorite clothes</p>
-                        <img src="/hero-image.png" alt="Hero Image" className="w-[50%] mx-auto" />
+        <section className="hero bg-[#FFF8E8] h-[90vh] flex flex-col items-center justify-center overflow-hidden">
+            <div className="text-center text-black"> 
+                <div className=""><h1 className="text-5xl font-bold mb-8">FIND YOUR STYLE</h1>
+                    <div className="animated-slide">
+                        {images.concat(images).map((img, index) => (
+                            <img
+                                key={index}
+                                src={img}
+                                alt={`slide ${index}`}
+                                className="w-[800px] h-auto"
+                            />
+                        ))}
                     </div>
                 </div>
             </div>
-        </selection>
+        </section>
     );
 }
 
