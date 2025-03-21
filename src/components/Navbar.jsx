@@ -5,7 +5,10 @@ import { FaSearch } from "react-icons/fa";
 
 const Navbar = () => {
   return (
-    <nav className="bg-[#151523] shadow-lg py-3 px-10 flex items-center justify-between rounded-full mx-24 mt-5 backdrop-blur-md border border-gray-700">
+    <nav className="bg-[#151523] shadow-lg py-3 px-10 flex items-center justify-between rounded-full mx-24 mt- backdrop-blur-md border border-gray-700">
+      <div className="">
+        
+      </div>
       <div className="flex items-center">
       <Link to="/">
         <img src="/Logo CLOVIO.svg" alt="Logo CLOVIO" className="h-10 w-auto" />
@@ -23,7 +26,7 @@ const Navbar = () => {
 
       <div className="flex items-center space-x-4">
         <Link to="/cart" className="text-gray-700 hover:text-blue-500">
-          <FaShoppingCart size={22} className="text-[#FFF8E8]"/>
+          <FaShoppingCart size={22} className="text-  "/>
         </Link>
         <Link
           to="/login"
