@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\ShoppingCartController;
+
 
 Route::get('/test', function () {
     return response()->json(['message' => 'API is working!']);
@@ -19,4 +22,35 @@ Route::prefix('products')->group(function () {
     Route::post('/', [ProductController::class, 'store']); // Create product
     Route::put('/{id}', [ProductController::class, 'update']); // Update product
     Route::delete('/{id}', [ProductController::class, 'destroy']); // Delete product
+});
+
+
+
+
+Route::prefix('orders')->group(function () {
+    // Membuat order baru (POST)
+    Route::post('/', [OrderController::class, 'store']);
+
+    // Menampilkan semua order (GET)
+    Route::get('/', [OrderController::class, 'index']);
+
+    // Menampilkan detail order (GET)
+    Route::get('/{id}', [OrderController::class, 'show'])->where('id', '\d+');
+
+    // Memperbarui order (PATCH)
+    Route::patch('/{id}', [OrderController::class, 'update'])->where('id', '\d+');
+
+    // Mengubah status pengiriman (PATCH)
+    Route::patch('/{id}/status', [OrderController::class, 'updateStatus'])->where('id', '\d+');
+
+    // Menghapus order (DELETE)
+    Route::delete('/{id}', [OrderController::class, 'destroy'])->where('id', '\d+');
+});
+
+
+Route::prefix('cart')->group(function () {
+    Route::get('/', [ShoppingCartController::class, 'index']); // Tampilkan semua isi keranjang
+    Route::post('/', [ShoppingCartController::class, 'store']); // Tambah item ke keranjang
+    Route::get('/{id}', [ShoppingCartController::class, 'show']); // Detail item di keranjang
+    Route::delete('/{id}', [ShoppingCartController::class, 'destroy']); // Hapus item di keranjang
 });

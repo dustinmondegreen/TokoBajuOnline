@@ -14,6 +14,7 @@ class Customer extends Model
     protected $keyType = 'string'; // Primary key berupa string
 
     protected $fillable = [
+        'customer_id',
         'customer_name',
         'customer_age',
         'customer_email',
