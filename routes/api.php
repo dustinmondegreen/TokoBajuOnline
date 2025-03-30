@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ShoppingCartController;
+use App\Http\Controllers\Api\PaymentController;
 
 
 Route::get('/test', function () {
@@ -23,8 +24,6 @@ Route::prefix('products')->group(function () {
     Route::put('/{id}', [ProductController::class, 'update']); // Update product
     Route::delete('/{id}', [ProductController::class, 'destroy']); // Delete product
 });
-
-
 
 
 Route::prefix('orders')->group(function () {
@@ -53,4 +52,9 @@ Route::prefix('cart')->group(function () {
     Route::post('/', [ShoppingCartController::class, 'store']); // Tambah item ke keranjang
     Route::get('/{id}', [ShoppingCartController::class, 'show']); // Detail item di keranjang
     Route::delete('/{id}', [ShoppingCartController::class, 'destroy']); // Hapus item di keranjang
+});
+
+Route::prefix('payments')->group(function () {
+    Route::post('/', [PaymentController::class, 'store']); // Buat pembayaran
+    Route::get('/{order_id}', [PaymentController::class, 'show']); // Lihat pembayaran berdasarkan order
 });

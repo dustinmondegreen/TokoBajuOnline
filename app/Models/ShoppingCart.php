@@ -44,11 +44,11 @@ class ShoppingCart extends Model
         $lastCart = self::latest('cart_id')->first();
 
         if (!$lastCart) {
-            return 'CART001';
+            return 'CART0001';
         }
 
         $lastNumber = (int) substr($lastCart->cart_id, 4);
-        $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
+        $newNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
 
         return 'CART' . $newNumber;
     }
