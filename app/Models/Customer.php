@@ -24,4 +24,9 @@ class Customer extends Model
     ];
 
     protected $hidden = ['password']; // Sembunyikan password dari response
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'customer_id');
+    }
 }

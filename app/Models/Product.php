@@ -24,4 +24,11 @@ class Product extends Model
         'color',
         'image',
     ];
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'product_id');
+    }
+
+    
 }

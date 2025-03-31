@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ShoppingCartController;
 use App\Http\Controllers\Api\PaymentController;
-
+use App\Http\Controllers\Api\ReviewController;
 
 Route::get('/test', function () {
     return response()->json(['message' => 'API is working!']);
@@ -58,3 +58,10 @@ Route::prefix('payments')->group(function () {
     Route::post('/', [PaymentController::class, 'store']); // Buat pembayaran
     Route::get('/{order_id}', [PaymentController::class, 'show']); // Lihat pembayaran berdasarkan order
 });
+
+Route::prefix('reviews')->group(function () {
+    Route::get('/', [ReviewController::class, 'index']); // GET /api/reviews
+    Route::post('/', [ReviewController::class, 'store']); // POST /api/reviews
+    Route::get('/{review_id}', [ReviewController::class, 'show']); // GET /api/reviews/{review_id}
+});
+
