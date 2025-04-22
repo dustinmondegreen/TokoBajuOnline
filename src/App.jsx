@@ -13,20 +13,20 @@ import TestPage from "./pages/testpage"
 const App = () => {
   return (
     <>
-    <Router>
-      {Navbar()}
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/catalog" element={<Catalog />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/registration" element={<Registration />} />
-        <Route path="/testpage" element={<TestPage />} />
-        
-      </Routes>
-    </Router>
-    <Footer></Footer>
+      <Router>
+        {Navbar()}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/catalog" element={<Catalog />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/registration" element={<Registration />} />
+          {/* <Route path="/testpage" element={<TestPage />} /> */}
+
+        </Routes>
+      </Router>
+      <Footer></Footer>
     </>
   );
 };
