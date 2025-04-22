@@ -1,5 +1,9 @@
 const Cart = () => {
-    return <h1>Halaman Cart</h1>;
+    return (
+      <div className="h-[90vh]">
+        <h1>Cart Page</h1>
+      </div>
+    )
   };
   
 export default Cart;
