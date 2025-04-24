@@ -39,16 +39,6 @@ const Login = () => {
                 Sign In
               </button>
             </form>
-
-            <div className="my-6 text-center text-white text-sm">Or continue with</div>
-              <div className="flex gap-4 justify-center">
-                <button className="flex text-sm font-semibold bg-white items-center gap-2 px-6 py-2 border rounded-lg hover:bg-gray-200 transition">
-                  <FcGoogle className="w-5 h-5" /> Google
-                </button>
-                <button className="flex text-sm font-semibold bg-white items-center gap-2 px-6 py-2 border rounded-lg hover:bg-gray-200 transition">
-                  <FaGithub className="w-5 h-5" /> GitHub
-                </button>
-              </div>
           </div>
         </div>
   
