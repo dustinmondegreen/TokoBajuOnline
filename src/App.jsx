@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Catalog from "./pages/Catalog";
 import Cart from "./pages/Cart";
+import Product from "./pages/Product"
 import Checkout from "./pages/Checkout";
 import Login from "./pages/Login";
 import Registration from "./pages/Registration";
@@ -23,7 +24,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/registration" element={<Registration />} />
           <Route path="/testpage" element={<TestPage />} />
-
+          <Route path="/product" element={< Product/>} />
         </Routes>
       </Router>
       <Footer></Footer>
