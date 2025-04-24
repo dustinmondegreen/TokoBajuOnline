@@ -266,7 +266,7 @@ const Hero = () => {
             <section className="relative bg-[#151523] py-16 ">
                 <div className="absolute top-0 left-0 w-full h-[30%] bg-[#FFF8E8] z-0"></div>
 
-                <div className="container mx-auto relative z-10 px-4">
+                <div className="container mx-auto relative z-10 px-4 max-w-6xl mx-auto">
                     <div className="flex items-center justify-between mb-12">
                         <h1 className="text-5xl font-blinky text-black text-center text-mid">Best Sellers</h1>
                         <Link to="/catalog" className="text-sm font-medium text-gray-600 hover:text-black transition-colors">
@@ -323,7 +323,7 @@ const Hero = () => {
                         <h2 className="text-5xl font-blinky text-white mb-4">Sport Trend</h2>
                         <p className="text-gray-400 text-lg">Discover your perfect sportswear collection</p>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
                         {sportTrend.map((category) => (
                             <Link
                                 key={category.id}
@@ -484,9 +484,9 @@ const Hero = () => {
                 </div>
             </section>
             <section className="bg-[#FFF8E8] py-24">
-                <div className="container mx-auto px-4">
+                <div className="container mx-auto px-4 max-w-6xl mx-auto">
                     <div className="text-center mb-16">
-                        <h2 className="text-5xl font-blinky text-black mb-4">Customer Support</h2>
+                        <h2 className="text-5xl font-blinky text-black mb-4 ">Customer Support</h2>
                             <p className="text-gray-600 text-lg">We're here to help you 24/7</p>
                     </div>
                     
