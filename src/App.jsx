@@ -8,7 +8,6 @@ import Checkout from "./pages/Checkout";
 import Login from "./pages/Login";
 import Registration from "./pages/Registration";
 import Footer from "./components/Footer"
-import TestPage from "./pages/testpage"
 
 
 const App = () => {
@@ -23,7 +22,6 @@ const App = () => {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/login" element={<Login />} />
           <Route path="/registration" element={<Registration />} />
-          <Route path="/testpage" element={<TestPage />} />
           <Route path="/product" element={< Product/>} />
         </Routes>
       </Router>
