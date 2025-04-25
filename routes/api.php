@@ -7,11 +7,15 @@ use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ShoppingCartController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ReviewController;
+use App\Models\Customer;
 
 Route::get('/test', function () {
     return response()->json(['message' => 'API is working!']);
 });
 
+Route::bind('customer', function ($value) {
+    return Customer::where('customer_id', $value)->firstOrFail();
+});
 
 Route::apiResource('customers', CustomerController::class);
 

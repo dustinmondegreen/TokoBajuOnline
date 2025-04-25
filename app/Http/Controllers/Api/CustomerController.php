@@ -12,12 +12,15 @@ class CustomerController extends Controller
     //auto generate customer id
     private function generateCustomerID()
     {
-        $lastCustomer = Customer::orderBy('customer_id', 'desc')->first();
-        if (!$lastCustomer) {
-            return 'CU0001';
-        }
-        $lastNumber = (int) substr($lastCustomer->customer_id, 1);
-        return 'CU' . str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
+        $prefix = 'CU';
+        $lastNumber = Customer::count() + 1;
+    
+        do {
+            $id = $prefix . str_pad($lastNumber, 4, '0', STR_PAD_LEFT);
+            $lastNumber++;
+        } while (Customer::where('customer_id', $id)->exists());
+    
+        return $id;
     }
     /**
      * Display a listing of the resource.
@@ -74,13 +77,15 @@ class CustomerController extends Controller
     public function update(Request $request, Customer $customer)
     {
         $validated = $request->validate([
-            'customer_name' => 'required|string|max:255',
-            'customer_age' => 'required|integer|min:0',
-            'customer_email' => 'required|email|unique:customers,customer_email,' . $customer->customer_id . ',customer_id',
-            'customer_phone_number' => 'required|string|max:15|unique:customers,customer_phone_number,' . $customer->customer_id . ',customer_id',
-            'customer_address' => 'required|string',
+            'customer_name' => 'sometimes|string|max:255',
+            'customer_age' => 'sometimes|integer|min:0',
+            'customer_email' => 'sometimes|email|unique:customers,customer_email,' . $customer->customer_id . ',customer_id',
+            'customer_phone_number' => 'sometimes|string|max:15|unique:customers,customer_phone_number,' . $customer->customer_id . ',customer_id',
+            'customer_address' => 'sometimes|string',
             'password' => 'nullable|string|min:8',
         ]);
+        
+        
         
         $data = array_filter($validated);
         if (isset($data['password'])) {
