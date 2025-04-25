@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Cart from "./pages/Cart";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Catalog from "./pages/Catalog";
-import Cart from "./pages/Cart";
 import Product from "./pages/Product"
 import Checkout from "./pages/Checkout";
 import Login from "./pages/Login";
@@ -10,11 +10,11 @@ import Registration from "./pages/Registration";
 import Footer from "./components/Footer"
 
 
-const App = () => {
+function App() {
   return (
-    <>
-      <Router>
-        {Navbar()}
+    <Router>
+      <div className="min-h-screen bg-[#FFF8E8] w-full">
+        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/catalog" element={<Catalog />} />
@@ -22,12 +22,12 @@ const App = () => {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/login" element={<Login />} />
           <Route path="/registration" element={<Registration />} />
-          <Route path="/product" element={< Product/>} />
+          <Route path="/product" element={<Product/>} />
         </Routes>
-      </Router>
-      <Footer></Footer>
-    </>
+        <Footer />
+      </div>
+    </Router>
   );
-};
+}
 
 export default App;

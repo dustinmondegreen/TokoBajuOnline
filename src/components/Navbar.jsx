@@ -20,7 +20,7 @@ const Navbar = () => {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
-    } 
+    }  
   };
 
   return (
@@ -88,7 +88,7 @@ const Navbar = () => {
             <h2 className="text-white text-lg font-semibold mb-4">Products Catalog</h2>
             <div className="grid grid-cols-2 gap-4">
               {productItems.map((item) => (
-                <Link
+                <Link 
                   key={item.name}
                   to={item.link}
                   onClick={toggleSidebar}

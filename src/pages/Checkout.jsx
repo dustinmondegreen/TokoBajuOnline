@@ -1,106 +1,128 @@
+import { useLocation } from 'react-router-dom';
+
 const Checkout = () => {
+    const location = useLocation();
+    const { cartItems, totalPrice } = location.state || { cartItems: [], totalPrice: 0 };
+
     return (
-      <div className="flex h-screen w-full font-jakarta"> 
-        <div className="w-1/2 flex-row items-center px-24 py-16 bg-white">
-          <div>
-            <h2 className="text-xl font-bold pb-3">MY INFORMATION</h2>
-            <div className="text-sm">
-              <h3>Akbar Zaidan Rohman</h3>
-              <h3>akbarzaidanr2@gmail.com</h3>
-              <h3>+62812 3456 7890</h3>
-              <h3>31/05/2002</h3>
+        <div className="min-h-screen bg-[#FFF8E8] p-8">
+            <div className="max-w-7xl mx-auto flex gap-8 relative">
+                {/* Left Section */}
+                <div className="w-2/3 bg-[#151523] text-[#FFF8E8] p-8 rounded-2xl">
+                    <h2 className="text-2xl font-bold mb-6">Payment</h2>
+                    
+                    {/* Payment Method */}
+                    <div className="flex gap-2 mb-6">
+                        <button className="bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 text-[#FFF8E8]">
+                            BCA
+                        </button>
+                        <button className="bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 text-[#FFF8E8]">
+                            BRI
+                        </button>
+                        <button className="bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600 text-[#FFF8E8]">
+                            E-Wallet
+                        </button>
+                    </div>
+
+                    {/* Shipping Address */}
+                    <div className="space-y-4 mb-6">
+                        <h3 className="text-lg font-semibold text-[#FFF8E8]">Shipping Address</h3>
+                        <div className="grid grid-cols-2 gap-4">
+                            <input 
+                                type="text" 
+                                placeholder="First Name"
+                                className="bg-gray-700 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#FFF8E8] placeholder-gray-400"
+                            />
+                            <input 
+                                type="text" 
+                                placeholder="Last Name"
+                                className="bg-gray-700 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#FFF8E8] placeholder-gray-400"
+                            />
+                        </div>
+                        <input 
+                            type="text" 
+                            placeholder="Address Line 1"
+                            className="w-full bg-gray-700 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#FFF8E8] placeholder-gray-400"
+                        />
+                        <input 
+                            type="text" 
+                            placeholder="Address Line 2"
+                            className="w-full bg-gray-700 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#FFF8E8] placeholder-gray-400"
+                        />
+                        <div className="grid grid-cols-3 gap-4">
+                            <input 
+                                type="text" 
+                                placeholder="City"
+                                className="bg-gray-700 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#FFF8E8] placeholder-gray-400"
+                            />
+                            <input 
+                                type="text" 
+                                placeholder="Province"
+                                className="bg-gray-700 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#FFF8E8] placeholder-gray-400"
+                            />
+                            <input 
+                                type="text" 
+                                placeholder="ZIP Code"
+                                className="bg-gray-700 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-[#FFF8E8] placeholder-gray-400"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Shipping Method */}
+                    <div className="space-y-4">
+                        <h3 className="text-lg font-semibold text-[#FFF8E8]">Shipping Method</h3>
+                        <div className="space-y-2">
+                            <div className="flex justify-between bg-gray-700 p-4 rounded-lg text-[#FFF8E8] cursor-pointer hover:bg-gray-600 transition-colors duration-300">
+                                <span>Regular</span>
+                                <span>Rp 20.000</span>
+                            </div>
+                            <div className="flex justify-between bg-gray-700 p-4 rounded-lg text-[#FFF8E8] cursor-pointer hover:bg-gray-600 transition-colors duration-300">
+                                <span>Express</span>
+                                <span>Rp 40.000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right Section - Summary */}
+                <div className="w-1/3">
+                    <div className="sticky top-8 bg-[#151523] text-[#FFF8E8] p-8 rounded-2xl">
+                        <h2 className="text-2xl font-bold mb-6">SUMMARY</h2>
+                        
+                        <div className="space-y-4 mb-6">
+                            <div className="flex justify-between">
+                                <span className="text-gray-400">Subtotal</span>
+                                <span className="text-[#FFF8E8]">Rp. {totalPrice}</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-gray-400">Shipping</span>
+                                <span className="text-[#FFF8E8]">Rp. 0.00</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-gray-400">Sales Tax</span>
+                                <span className="text-[#FFF8E8]">Rp. 0.00</span>
+                            </div>
+                        </div>
+
+                        <div className="border-t border-gray-700 pt-4 mb-6">
+                            <div className="flex justify-between font-bold text-[#FFF8E8]">
+                                <span>Estimated Total</span>
+                                <span>Rp. {totalPrice}</span>
+                            </div>
+                        </div>
+
+                        <button className="w-full bg-[#FFF8E8] text-[#151523] py-4 rounded-lg font-bold mb-6 hover:bg-gray-200 transition-colors">
+                            PLACE ORDER →
+                        </button>
+
+                        <div className="text-center text-sm text-gray-400">
+                            Need help? Call us at 0-8123-456-789
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-
-          <div className="pt-12">
-            <h2 className="text-xl font-bold pb-3">DELIVERY</h2>
-            <div className="mb-6 flex gap-6">
-              <div className="w-1/2">
-                <label className="block text-black text-sm font-semibold mb-2">First Name</label>
-                <h3 alt="">Akbar Zaidan</h3>
-              </div>
-              <div className="w-1/2">
-                <label className="block text-black text-sm font-semibold mb-2">Last Name</label>
-                <h3 alt="">Rohman</h3>
-              </div>
-            </div>
-
-            <div className="mb-6">
-              <label className="block text-black text-sm font-semibold mb-2">Address</label>
-              <h3 alt="">Jalan Anggrek 1 Gedung tiga limat tujuh sembilan tiga asd  asd as d asd as d asd sa d asd  asd as das d asd </h3>
-            </div>
-
-            <div className="mb-6 flex gap-6">
-              <div className="w-1/2">
-                <label className="block text-black text-sm font-semibold mb-2">Province</label>
-                <h3 alt="">Rohman</h3>
-              </div>
-              <div className="w-1/2">
-                <label className="block text-black text-sm font-semibold mb-2">City</label>
-                <h3 alt="">Rohman</h3>
-              </div>
-            </div>
-
-            <div className="mb-6 flex gap-6">
-              <div className="w-1/2">
-                <label className="block text-black text-sm font-semibold mb-2">Province</label>
-                <h3 alt="">Jakarta</h3>
-              </div>
-              <div className="w-1/2">
-                <label className="block text-black text-sm font-semibold mb-2">City</label>
-                <h3 alt="">Jakarta Barat</h3>
-              </div>
-            </div>
-
-            <div className="mb-6 flex gap-6">
-              <div className="w-1/2">
-                <label className="block text-black text-sm font-semibold mb-2">District</label>
-                <h3 alt="">Kebon Jeruk</h3>
-              </div>
-              <div className="w-1/2">
-                <label className="block text-black text-sm font-semibold mb-2">Post Code</label>
-                <h3 alt="">11210</h3>
-              </div>
-            </div>
-
-            <form action="" className="py-3">
-              <div >
-                <h2 className="text-xl font-bold pt-3">Shipping Method</h2>
-                <select name="" id="" className="w-full text-sm px-4 py-3 mt-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                  <option value="">JNE</option>
-                  <option value="">J&T</option>
-                </select>
-              </div>
-
-              <div className="py-3">
-                <h2 className="text-xl font-bold pt-3">Payment Method</h2>
-                <select name="" id="" className="w-full text-sm px-4 py-3 mt-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                  <option value="">JNE</option>
-                  <option value="">J&T</option>
-                  <option value="">POS Indonesia</option>
-                  <option value="">Sicepat</option>
-                  <option value="">Lion Parcel</option>
-                  <option value="">Ninja Express</option>
-                </select>
-              </div>
-
-              <button 
-                type="submit" 
-                className="w-full bg-[#4F39F6] font-semibold text-white my-10 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
-              >
-                BUY
-              </button>
-            </form>
-          </div>
-          
         </div>
-
-        <div className="w-1/3 flex items-center justify-center bg-white">
-
-        </div>
-      </div>
     );
-  };
-  
-  export default Checkout;
-  
+};
+
+export default Checkout;

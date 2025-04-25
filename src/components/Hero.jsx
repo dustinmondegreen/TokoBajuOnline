@@ -42,7 +42,7 @@ const Hero = () => {
             link: "/product/basic-black-tee",
             name: "Basic Black T-Shirt",
             brand: "Essential Wear",
-            price: "29.99",
+            price: "Rp. 499.000",
             rating: 4.8,
             reviews: 328
         },
@@ -51,7 +51,7 @@ const Hero = () => {
             link: "/product/vintage-denim",
             name: "Vintage Denim Jacket",
             brand: "Street Culture",
-            price: "89.99",
+            price: "Rp. 1.499.000",
             rating: 4.9,
             reviews: 245
         },
@@ -60,7 +60,7 @@ const Hero = () => {
             link: "/product/cargo-pants",
             name: "Cargo Pants Relaxed Fit",
             brand: "Urban Style",
-            price: "65.99",
+            price: "Rp. 859.000",
             rating: 4.7,
             reviews: 186
         },
@@ -69,7 +69,7 @@ const Hero = () => {
             link: "/product/oversize-hoodie",
             name: "Oversize Comfort Hoodie",
             brand: "Comfort Plus",
-            price: "55.99",
+            price: "Rp. 659.000",
             rating: 4.9,
             reviews: 421
         },
@@ -78,7 +78,7 @@ const Hero = () => {
             link: "/product/classic-sweatshirt",
             name: "Classic Gray Sweatshirt",
             brand: "Daily Basics",
-            price: "45.99",
+            price: "Rp. 459.000",
             rating: 4.6,
             reviews: 167
         },
@@ -87,7 +87,7 @@ const Hero = () => {
             link: "/product/varsity-jacket",
             name: "Varsity Baseball Jacket",
             brand: "Campus Style",
-            price: "79.99",
+            price: "Rp. 1.299.000",
             rating: 4.8,
             reviews: 234
         },
@@ -96,7 +96,7 @@ const Hero = () => {
             link: "/product/crop-top",
             name: "Essential Crop Top",
             brand: "Modern Basic",
-            price: "24.99",
+            price: "Rp. 299.000",
             rating: 4.7,
             reviews: 298
         },
@@ -105,7 +105,7 @@ const Hero = () => {
             link: "/product/bomber-jacket",
             name: "Classic Bomber Jacket",
             brand: "Street Wear",
-            price: "95.99",
+            price: "Rp. 1.749.000",
             rating: 4.9,
             reviews: 156
         }
@@ -217,7 +217,7 @@ const Hero = () => {
 
     return (
         <>
-            <section className="h-[100vh] flex items-center justify-center bg-cover bg-center overflow-hidden">
+            <section className="h-[100vh] flex items-center justify-center bg-[#FFF8E8] bg-cover bg-center overflow-hidden">
                 <div className="text-center w-full">
                     <h1 className="text-4xl font-bold relative top-[-20px] text-black font-blinky mt-[-100px]">Find Your Style</h1>
                     <Slider {...settings}>
@@ -266,7 +266,7 @@ const Hero = () => {
             <section className="relative bg-[#151523] py-16 ">
                 <div className="absolute top-0 left-0 w-full h-[30%] bg-[#FFF8E8] z-0"></div>
 
-                <div className="container mx-auto relative z-10 px-4 max-w-6xl mx-auto">
+                <div className="container mx-auto relative z-10 px-4 max-w-6xl">
                     <div className="flex items-center justify-between mb-12">
                         <h1 className="text-5xl font-blinky text-black text-center text-mid">Best Sellers</h1>
                         <Link to="/catalog" className="text-sm font-medium text-gray-600 hover:text-black transition-colors">
@@ -278,7 +278,8 @@ const Hero = () => {
                         {bestSeller.map((item, index) => (
                             <Link
                                 key={index}
-                                to={item.link}
+                                to="/product" // Changed from item.link to "/product"
+                                state={{ productData: item }} // Pass product data to Product page
                                 className="group relative block"
                             >
                                 <div className="relative aspect-[3/4] overflow-hidden bg-gray-100 rounded-lg mb-4">
@@ -327,7 +328,8 @@ const Hero = () => {
                         {sportTrend.map((category) => (
                             <Link
                                 key={category.id}
-                                to={category.link}
+                                to="/product" // Changed from category.link to "/product"
+                                state={{ productData: category }} // Pass category data
                                 className="group relative overflow-hidden rounded-2xl aspect-[4/5] bg-gray-900"
                             >   
                                 <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-110">
@@ -362,7 +364,7 @@ const Hero = () => {
                     </div>
                 </div>
             </section>
-            <section className="bg-[#151523] vh-[100vh] py-24 mb-6">
+            <section className="bg-[#151523] py-16">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-8">
                         <h2 className="text-4xl font-blinky text-white mb-2">Limited Edition</h2>
@@ -401,7 +403,10 @@ const Hero = () => {
                                         <span className="text-white text-sm font-bold">
                                             Rp {item.price}
                                         </span>
-                                        <Link to="/catalog">
+                                        <Link 
+                                            to="/product" // Changed from "/catalog" to "/product"
+                                            state={{ productData: item }} // Pass item data
+                                        >
                                             <button className="bg-white text-black px-3 py-1.5 rounded text-xs font-medium hover:bg-gray-100 transition-colors">
                                                 Beli Sekarang
                                             </button>
@@ -484,7 +489,7 @@ const Hero = () => {
                 </div>
             </section>
             <section className="bg-[#FFF8E8] py-24">
-                <div className="container mx-auto px-4 max-w-6xl mx-auto">
+                <div className="container mx-auto px-4 max-w-6xl">
                     <div className="text-center mb-16">
                         <h2 className="text-5xl font-blinky text-black mb-4 ">Customer Support</h2>
                             <p className="text-gray-600 text-lg">We're here to help you 24/7</p>
@@ -499,7 +504,7 @@ const Hero = () => {
                                 <div className="flex justify-center text-black">
                                     {service.icon}
                                 </div>
-                                <h3 className="text-2xl font-bold mb-2">{service.title}</h3>
+                                <h3 className="text-2xl font-bold mb-2 text-white">{service.title}</h3>
                                 <p className="text-gray-600 mb-6">{service.description}</p>
                                 
                                 <div className="space-y-3">
