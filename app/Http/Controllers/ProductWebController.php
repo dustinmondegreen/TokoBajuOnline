@@ -1,20 +1,22 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
-class ProductController extends Controller
+class ProductWebController extends Controller
 {
     public function index()
     {
         $products = Product::all();
-        return response()->json(['success' => true, 'data' => $products], Response::HTTP_OK);
+        return view('admin.products.index', compact('products'));
+    }
+
+    public function create()
+    {
+        return view('admin.products.create');
     }
 
     public function store(Request $request)
@@ -33,27 +35,23 @@ class ProductController extends Controller
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('products', 'public');
-            $validated['image'] = Storage::url($path); // simpan path public ke DB
+            $validated['image'] = Storage::url($path);
         }
 
-        $product = Product::create($validated);
+        Product::create($validated);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Product successfully created.',
-            'data' => $product
-        ], Response::HTTP_CREATED);
+        return redirect()->route('admin.products.index')->with('success', 'Product successfully created.');
     }
 
-    public function show($id)
+    public function edit($product_id)
     {
-        $product = Product::findOrFail($id);
-        return response()->json(['success' => true, 'data' => $product], Response::HTTP_OK);
+        $product = Product::where('product_id', $product_id)->firstOrFail();
+        return view('admin.products.edit', compact('product'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $product_id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::where('product_id', $product_id)->firstOrFail();
 
         $validated = $request->validate([
             'product_name' => 'sometimes|required|string|max:255',
@@ -66,24 +64,23 @@ class ProductController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
+            if ($product->image) {
+                $imagePath = str_replace('/storage/', '', $product->image);
+                Storage::disk('public')->delete($imagePath);
+            }
             $path = $request->file('image')->store('products', 'public');
             $validated['image'] = Storage::url($path);
         }
 
         $product->update($validated);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Product successfully updated.',
-            'data' => $product
-        ], Response::HTTP_OK);
+        return redirect()->route('admin.products.index')->with('success', 'Product successfully updated.');
     }
 
-    public function destroy($id)
+    public function destroy($product_id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::where('product_id', $product_id)->firstOrFail();
 
-        // Hapus file image dari storage juga
         if ($product->image) {
             $imagePath = str_replace('/storage/', '', $product->image);
             Storage::disk('public')->delete($imagePath);
@@ -91,6 +88,6 @@ class ProductController extends Controller
 
         $product->delete();
 
-        return response()->json(['success' => true, 'message' => 'Product successfully deleted.'], Response::HTTP_OK);
+        return redirect()->route('admin.products.index')->with('success', 'Product successfully deleted.');
     }
 }
