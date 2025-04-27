@@ -1,46 +1,120 @@
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
-import { FaShoppingCart } from "react-icons/fa";
-import { FaSearch } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { FaShoppingCart, FaSearch } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
+import axios from "axios";
 
 const productItems = [
-  { name: "T-Shirts", icon: "👕", link: "/Product" },
-  { name: "Hoodie", icon: "🧥", link: "/Product" },
-  { name: "Jacket", icon: "🧥", link: "/Product" },
-  { name: "Vest", icon: "🦺", link: "/Product" },
+  { name: "T-Shirts", icon: "👕", link: "/Catalog" },
+  { name: "Hoodie", icon: "🧥", link: "/Catalog" },
+  { name: "Jacket", icon: "🧥", link: "/Catalog" },
+  { name: "Vest", icon: "🦺", link: "/Catalog" },
 ];
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Add this state
-  const profileRef = useRef(null);
+  const [isOpen, setIsOpen] = useState(false); // Sidebar utama
+  const [isProfileOpen, setIsProfileOpen] = useState(false); // Sidebar profile
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false); // Dropdown settings
+  const [user, setUser] = useState(null);
+  const [address, setAddress] = useState("");
+  const [age, setAge] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (profileRef.current && !profileRef.current.contains(event.target)) {
-        setShowProfileDropdown(false);
+    const checkUser = () => {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        try {
+          const parsedUser = JSON.parse(storedUser);
+          setUser(parsedUser);
+        } catch (error) {
+          console.error("Failed to parse user from localStorage:", error);
+          localStorage.removeItem("user");
+        }
+      } else {
+        setUser(null);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    checkUser();
+    window.addEventListener("storage", checkUser);
+
+    return () => {
+      window.removeEventListener("storage", checkUser);
+    };
   }, []);
 
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-    if (!isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+    setIsProfileOpen(false); // Tutup sidebar profile
+    navigate("/"); // Arahkan ke halaman utama
+  };
+
+  const handleSaveProfile = async () => {
+    if (!user) {
+      alert("No user logged in.");
+      return;
     }
+  
+    try {
+      const response = await axios({
+        method: 'PUT',
+        url: `http://localhost:8000/api/customers/${user.customer_id}`,
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        data: {
+          customer_address: address,
+          customer_age: age
+        }
+      });
+  
+      console.log("✅ Update Success:", response.data);
+      alert("Profile updated successfully!");
+  
+      const updatedUser = { ...user, customer_address: address, customer_age: age };
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      setUser(updatedUser);
+  
+    } catch (error) {
+      console.error("❌ Axios Error (catch):", error.message);
+      alert("An error occurred while updating profile: " + (error.response?.data?.message || error.message));
+    }
+  };
+  
+  const handleLogin = (userData) => {
+    localStorage.setItem("user", JSON.stringify(userData)); // Simpan data user ke localStorage
+    setUser(userData); // Perbarui state user secara langsung
+  };
+
+  const toggleSidebar = () => {
+    setIsOpen((prev) => {
+      const newState = !prev;
+      document.body.style.overflow = newState ? "hidden" : "unset";
+      return newState;
+    });
+  };
+
+  const toggleProfileSidebar = () => {
+    setIsProfileOpen((prev) => {
+      const newState = !prev;
+      document.body.style.overflow = newState ? "hidden" : "unset";
+      return newState;
+    });
+  };
+
+  const toggleSettingsDropdown = () => {
+    setIsSettingsOpen((prev) => !prev);
   };
 
   return (
     <>
+      {/* Navbar utama */}
       <nav className="bg-[#151523] shadow-lg py-3 px-10 flex items-center justify-between rounded-full mx-24 mt-5 mb-5 backdrop-blur-md border border-gray-700">
-        <div className="">
+        {/* Sidebar button */}
+        <div>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -53,12 +127,15 @@ const Navbar = () => {
             <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
           </svg>
         </div>
+
+        {/* Logo */}
         <div className="flex items-center ml-12 mr-14">
           <Link to="/">
             <img src="/Logo CLOVIO.svg" alt="Logo CLOVIO" className="h-10 w-auto" />
           </Link>
         </div>
 
+        {/* Search Bar */}
         <div className="flex-1 mx-64 relative ml-12">
           <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#151523]" size={20} />
           <input
@@ -68,82 +145,16 @@ const Navbar = () => {
           />
         </div>
 
+        {/* Cart + Profile */}
         <div className="flex items-center space-x-8">
           <Link to="/cart" className="text-white hover:text-blue-600 transition-colors">
             <FaShoppingCart size={22} />
           </Link>
 
-          {/* Profile Section */}
-          <div className="relative" ref={profileRef}>
-            {isAuthenticated ? (
-              // Profile Button and Dropdown for authenticated users
-              <div className="relative">
-                <button
-                  onClick={() => setShowProfileDropdown(!showProfileDropdown)}
-                  className="relative group"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="w-8 h-8 text-white hover:text-blue-600 transition-colors"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                    />
-                  </svg>
-                </button>
-
-                {/* Profile Dropdown Menu */}
-                {showProfileDropdown && (
-                  <div className="absolute right-0 mt-2 w-48 bg-[#151523] rounded-lg shadow-lg border border-gray-700 overflow-hidden">
-                    <div className="p-4 border-b border-gray-700">
-                      <p className="text-[#FFF8E8] font-medium">John Doe</p>
-                      <p className="text-gray-400 text-sm">john@example.com</p>
-                    </div>
-                    <div className="py-2">
-                      <Link
-                        to="/profile"
-                        className="block px-4 py-2 text-[#FFF8E8] hover:bg-blue-600 transition-colors"
-                        onClick={() => setShowProfileDropdown(false)}
-                      >
-                        My Profile
-                      </Link>
-                      <Link
-                        to="/orders"
-                        className="block px-4 py-2 text-[#FFF8E8] hover:bg-blue-600 transition-colors"
-                        onClick={() => setShowProfileDropdown(false)}
-                      >
-                        My Orders
-                      </Link>
-                      <Link
-                        to="/settings"
-                        className="block px-4 py-2 text-[#FFF8E8] hover:bg-blue-600 transition-colors"
-                        onClick={() => setShowProfileDropdown(false)}
-                      >
-                        Settings
-                      </Link>
-                      <button
-                        onClick={() => {
-                          setIsAuthenticated(false);
-                          setShowProfileDropdown(false);
-                        }}
-                        className="w-full text-left px-4 py-2 text-[#FFF8E8] hover:bg-blue-600 transition-colors"
-                      >
-                        Sign Out
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ) : (
-              // Sign In Button for non-authenticated users
-              <Link
-                to="/login"
+          <div>
+            {user ? (
+              <button
+                onClick={toggleProfileSidebar}
                 className="relative group"
               >
                 <svg
@@ -160,20 +171,104 @@ const Navbar = () => {
                     d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
                   />
                 </svg>
-
-                <div className="absolute invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300 -bottom-14 left-1/2 -translate-x-1/2 whitespace-nowrap bg-[#151523] text-[#FFF8E8] text-base font-bold py-3 px-16 rounded-lg shadow-lg border border-gray-700">
-                  Sign in
-                </div>
+              </button>
+            ) : (
+              <Link to="/login" className="text-white hover:text-blue-600 transition-colors">
+                Sign In
               </Link>
             )}
           </div>
         </div>
       </nav>
 
+      {/* Sidebar Profile */}
+      {isProfileOpen && (
+        <>
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-40"
+            onClick={toggleProfileSidebar}
+          />
+          <div className="fixed top-0 right-0 h-full w-80 bg-[#151523] z-50 transform transition-transform duration-300">
+            <div className="p-6 h-full flex flex-col">
+              <div className="flex justify-between items-center mb-8">
+                <h2 className="text-white text-lg font-semibold">Profile</h2>
+                <IoClose
+                  size={24}
+                  className="text-white hover:text-blue-600 cursor-pointer"
+                  onClick={toggleProfileSidebar}
+                />
+              </div>
+
+              <div className="mb-8">
+                <p className="text-[#FFF8E8] font-medium">{user?.customer_name}</p>
+                <p className="text-gray-400 text-sm">{user?.customer_email}</p>
+              </div>
+
+              <div className="mb-8">
+                <h3
+                  className="text-white text-lg font-semibold mb-4 cursor-pointer"
+                  onClick={toggleSettingsDropdown}
+                >
+                  Settings
+                </h3>
+                {isSettingsOpen && (
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-gray-400 text-sm mb-1">Address</label>
+                      <input
+                        type="text"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        placeholder="Enter your address"
+                        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-400 text-sm mb-1">Umur</label>
+                      <input
+                        type="number"
+                        value={age}
+                        onChange={(e) => setAge(e.target.value)}
+                        placeholder="Enter your age"
+                        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      />
+                    </div>
+                      <button
+                        onClick={handleSaveProfile}
+                        className="w-full text-left mb-4 px-4 py-2 text-[#151523] bg-[#FFF8E8] hover:bg-blue-600 hover:text-[#FFF8E8]"
+                      >
+                        Save
+                      </button>
+                  </div>
+                )}
+              </div>
+              {/* Tambahkan Tombol Receipts */}
+              <button
+                onClick={() => {
+                  toggleProfileSidebar();
+                  navigate('/Receipt');
+                }}
+                className="w-full text-left mb-4 px-4 py-2 text-[#151523] bg-[#FFF8E8] hover:bg-blue-600 hover:text-[#FFF8E8]"
+              >
+                Receipts
+              </button>
+              <button
+                onClick={handleLogout}
+                className="w-full text-left mt-36 px-4 py-2 text-[#151523] bg-[#FFF8E8] hover:bg-blue-600 hover:text-[#FFF8E8]"
+              >
+                Sign Out
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Background hitam kalau sidebar kebuka */}
       {isOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-40" onClick={toggleSidebar} />
       )}
 
+      {/* Sidebar */}
       <div className={`fixed top-0 left-0 h-full w-80 bg-[#151523] z-50 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="p-6 h-full flex flex-col">
           <div className="flex justify-between items-center mb-8">

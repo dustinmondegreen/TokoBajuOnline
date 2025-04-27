@@ -8,6 +8,9 @@ import Checkout from "./pages/Checkout";
 import Login from "./pages/Login";
 import Registration from "./pages/Registration";
 import Footer from "./components/Footer"
+import Receipt from "./pages/Receipt"; 
+import ReceiptPage from "./pages/ReceiptPage";
+
 
 
 function App() {
@@ -24,6 +27,8 @@ function App() {
           <Route path="/registration" element={<Registration />} />
           <Route path="/product" element={<Product/>} />
           <Route path="/adminHome" element={<adminHome />} />
+          <Route path="/receipt/:orderId" element={<Receipt />} />
+          <Route path="/receipt" element={<ReceiptPage />} />
         </Routes>
         <Footer />
       </div>

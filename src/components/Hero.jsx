@@ -3,9 +3,13 @@ import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";    
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const Hero = () => {
 
+    
+////
     const images = [
         "/Hero1.jpg",
         "/Hero2.jpg",   
@@ -24,92 +28,45 @@ const Hero = () => {
     };
     
     const brand = [
-        { image: "/adidas.png", link: "/Catalog" },
-        { image: "/nike.png", link: "/Catalog" },
-        { image: "/puma.png", link: "/Catalog" },
-        { image: "/underarmour.png", link: "/Catalog" },
-        { image: "/newbalance.png", link: "/Catalog" }
+        { image: "/icons8-t-shirt-50.png", link: "/Catalog" },
+        { image: "/icons8-hoodie-50.png", link: "/Catalog" },
+        { image: "/icons8-jacket-50.png", link: "/Catalog" },
+        { image: "/icons8-vest-50.png", link: "/Catalog" },
     ];
+    
     
     const brandImage = [
         { image: "/Frame 27.png", link: "/catalog/adidas" },
         { image: "/Frame 28.png", link: "/catalog/nike" },
     ];
     
-    const bestSeller = [
-        { 
-            image: "/tshirt-basic-black.jpg", 
-            link: "/product/basic-black-tee",
-            name: "Basic Black T-Shirt",
-            brand: "Essential Wear",
-            price: "Rp. 499.000",
-            rating: 4.8,
-            reviews: 328
-        },
-        { 
-            image: "/denim-jacket-vitage.jpg",
-            link: "/product/vintage-denim",
-            name: "Vintage Denim Jacket",
-            brand: "Street Culture",
-            price: "Rp. 1.499.000",
-            rating: 4.9,
-            reviews: 245
-        },
-        { 
-            image: "/cargo-pants.jpg",
-            link: "/product/cargo-pants",
-            name: "Cargo Pants Relaxed Fit",
-            brand: "Urban Style",
-            price: "Rp. 859.000",
-            rating: 4.7,
-            reviews: 186
-        },
-        { 
-            image: "/hoodie-comfort.jpg",
-            link: "/product/oversize-hoodie",
-            name: "Oversize Comfort Hoodie",
-            brand: "Comfort Plus",
-            price: "Rp. 659.000",
-            rating: 4.9,
-            reviews: 421
-        },
-        { 
-            image: "/sweetshirt-grey.jpg",
-            link: "/product/classic-sweatshirt",
-            name: "Classic Gray Sweatshirt",
-            brand: "Daily Basics",
-            price: "Rp. 459.000",
-            rating: 4.6,
-            reviews: 167
-        },
-        { 
-            image: "/varsity-baseball.jpg",
-            link: "/product/varsity-jacket",
-            name: "Varsity Baseball Jacket",
-            brand: "Campus Style",
-            price: "Rp. 1.299.000",
-            rating: 4.8,
-            reviews: 234
-        },
-        { 
-            image: "/essential-crop-top.jpg",
-            link: "/product/crop-top",
-            name: "Essential Crop Top",
-            brand: "Modern Basic",
-            price: "Rp. 299.000",
-            rating: 4.7,
-            reviews: 298
-        },
-        { 
-            image: "/bomber-jacket.jpg",
-            link: "/product/bomber-jacket",
-            name: "Classic Bomber Jacket",
-            brand: "Street Wear",
-            price: "Rp. 1.749.000",
-            rating: 4.9,
-            reviews: 156
+    const [bestSeller, setBestSeller] = useState([]); // Awalnya kosong
+
+    useEffect(() => {
+        fetchBestSeller();
+    }, []);
+
+    const fetchBestSeller = async () => {
+        try {
+            const response = await axios.get('http://localhost:8000/api/products');
+            const mappedProducts = response.data.data.map(product => ({
+                id : product.product_id,
+                image: `http://localhost:8000${product.image}`,
+                link: "/product", // Link tetap sama
+                name: product.product_name,
+                color: product.color,
+                material: product.material,
+                quantity: product.quantity,
+                category: product.category ,
+                price:Number(product.price).toLocaleString('id-ID', { minimumFractionDigits: 0 }),
+                rating: 4.8, // Dummy rating
+                reviews: 200  // Dummy reviews
+            }));
+            setBestSeller(mappedProducts);
+        } catch (error) {
+            console.error('Failed to fetch products:', error);
         }
-    ];
+    };
     
     const sportTrend = [
         {
@@ -236,7 +193,7 @@ const Hero = () => {
             </section>
             <section>
                 <div className="h-[90vh] bg-[#FFF8E8] flex flex-col mt-[-50px] justify-start items-center">
-                    <h1 className="font-blinky text-4xl align-middle text-black mb-5">Shop By Brand</h1>
+                    <h1 className="font-blinky text-4xl align-middle text-black mb-5">Shop By Category</h1>
                     <div className="flex space-x-10 mt-5">
                         {brand.map((brand, index) => (
                             <Link 
@@ -266,57 +223,57 @@ const Hero = () => {
             <section className="relative bg-[#151523] py-16 ">
                 <div className="absolute top-0 left-0 w-full h-[30%] bg-[#FFF8E8] z-0"></div>
 
-                <div className="container mx-auto relative z-10 px-4 max-w-6xl">
-                    <div className="flex items-center justify-between mb-12">
-                        <h1 className="text-5xl font-blinky text-black text-center text-mid">Best Sellers</h1>
-                        <Link to="/catalog" className="text-sm font-medium text-gray-600 hover:text-black transition-colors">
-                            View All Products →
-                        </Link>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {bestSeller.map((item, index) => (
-                            <Link
-                                key={index}
-                                to="/product" // Changed from item.link to "/product"
-                                state={{ productData: item }} // Pass product data to Product page
-                                className="group relative block"
-                            >
-                                <div className="relative aspect-[3/4] overflow-hidden bg-gray-100 rounded-lg mb-4">
-                                    <img
-                                        src={item.image}
-                                        alt={item.name}
-                                        className="w-full h-full object-cover object-center transform transition-transform duration-500 group-hover:scale-105"
-                                    />
-                                    <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-5 transition-opacity duration-300"></div>
-                                    
-                                    <button className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white text-black text-xs font-medium py-2 px-4 rounded-full opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-                                        Quick Add
-                                    </button>
-                                </div>
-
-                                <div className="space-y-1">
-                                    <div className="flex items-center space-x-1">
-                                        <span className="text-yellow-400">★</span>
-                                        <span className="text-sm text-gray-600">{item.rating}</span>
-                                        <span className="text-sm text-gray-400">({item.reviews})</span>
-                                    </div>
-                                    <h3 className="text-sm font-medium text-gray-900 group-hover:text-gray-600 transition-colors">
-                                        {item.name}
-                                    </h3>
-                                    <p className="text-sm text-gray-500">{item.brand}</p>
-                                    <p className="text-sm font-semibold text-gray-900">${item.price}</p>
-                                </div>
-
-                                <button className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-gray-100">
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                                    </svg>
-                                </button>
+                    <div className="container mx-auto relative z-10 px-4 max-w-6xl">
+                        <div className="flex items-center justify-between mb-12">
+                            <h1 className="text-5xl font-blinky text-black text-center text-mid">Best Sellers</h1>
+                            <Link to="/catalog" className="text-sm font-medium text-gray-600 hover:text-black transition-colors">
+                                View All Products →
                             </Link>
-                        ))}
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                            {bestSeller.map((item, index) => (
+                                <Link
+                                    key={index}
+                                    to="/product"
+                                    state={{ productData: item }}
+                                    className="group relative block"
+                                >
+                                    <div className="relative aspect-[3/4] overflow-hidden bg-gray-100 rounded-lg mb-4">
+                                        <img
+                                            src={item.image}
+                                            alt={item.name}
+                                            className="w-full h-full object-cover object-center transform transition-transform duration-500 group-hover:scale-105"
+                                        />
+                                        <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-5 transition-opacity duration-300"></div>
+                                        
+                                        <button className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white text-black text-xs font-medium py-2 px-4 rounded-full opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+                                            Quick Add
+                                        </button>
+                                    </div>
+
+                                    <div className="space-y-1">
+                                        <div className="flex items-center space-x-1">
+                                            <span className="text-yellow-400">★</span>
+                                            <span className="text-sm text-gray-600">{item.rating}</span>
+                                            <span className="text-sm text-gray-400">({item.reviews})</span>
+                                        </div>
+                                        <h3 className="text-sm font-medium text-gray-900 group-hover:text-gray-600 transition-colors">
+                                            {item.name}
+                                        </h3>
+                                        <p className="text-sm text-gray-500">{item.category}</p>
+                                        <p className="text-sm font-semibold text-gray-900">Rp {item.price}</p>
+                                    </div>
+
+                                    <button className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-gray-100">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                        </svg>
+                                    </button>
+                                </Link>
+                            ))}
+                        </div>
                     </div>
-                </div>
             </section>
             <section className="bg-[#151523] py-24">
                 <div className="container mx-auto px-4">
@@ -328,7 +285,7 @@ const Hero = () => {
                         {sportTrend.map((category) => (
                             <Link
                                 key={category.id}
-                                to="/product" // Changed from category.link to "/product"
+                                to="/Catalog" 
                                 state={{ productData: category }} // Pass category data
                                 className="group relative overflow-hidden rounded-2xl aspect-[4/5] bg-gray-900"
                             >   

@@ -1,93 +1,105 @@
-import { FcGoogle } from "react-icons/fc";
-import { FaGithub } from "react-icons/fa";
+import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
-    return (
-      <div className="flex h-screen w-full font-jakarta"> 
-        <div className="w-1/2 bg-blue-500 flex items-center justify-center">
-          <img src="/Dummy 1.jpg" alt="" className="w-full h-full object-cover"/>
-        </div>
-        
-        <div className="w-1/2 flex items-center justify-center bg-[#151523]">
-          <div className="w-full max-w-lg">
-            <img src="/Logo CLOVIO.svg" className="pb-10" alt="" />
-            <h2 className="text-2xl font-bold text-white mb-6">Create your account</h2>
-            <form>
-              <div className="mb-4 flex gap-6">
-                <div className="w-1/2">
-                  <label className="block text-white font-semibold mb-2">Full Name</label>
-                  <input 
-                    type="text" 
-                    className="w-full text-sm font-medium px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                    placeholder="Enter your full name"
-                  />
-                </div>
-                <div className="w-1/2">
-                  <label className="block text-white font-semibold mb-2">Username</label>
-                  <input 
-                    type="text" 
-                    className="w-full text-sm font-medium px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                    placeholder="Enter your username"
-                  />
-                </div>
-              </div>
-              
-              <div className="mb-4 flex gap-6">
-                <div className="w-1/2">
-                  <label className="block text-white font-semibold mb-2">Email</label>
-                  <input 
-                    type="email" 
-                    className="w-full text-sm font-medium px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                    placeholder="Enter your email"
-                  />
-                </div>
-                <div className="w-1/2">
-                  <label className="block text-white font-semibold mb-2">Phone Number</label>
-                  <input 
-                    type="tel" 
-                    className="w-full text-sm font-medium px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                    placeholder="Enter your phone number"
-                  />
-                </div>
-              </div>
-              
-              <div className="mb-4 flex gap-6">
-                <div className="w-1/2">
-                  <label className="block text-white font-semibold mb-2">Password</label>
-                  <input 
-                    type="password" 
-                    className="w-full text-sm font-medium px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                    placeholder="Enter your password"
-                  />
-                </div>
-                <div className="w-1/2">
-                  <label className="block text-white font-semibold mb-2">Confirm Password</label>
-                  <input 
-                    type="password" 
-                    className="w-full text-sm font-medium px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                    placeholder="Confirm your password"
-                  />
-                </div>
-              </div>
-              <div className="mb-4 flex items-center justify-between py-3">
-                <label className="flex text-xs text-white items-center text-sm text-white">
-                Already have an account?
-                <a href="/Login" className="text-xsa pl-1 text-white font-bold hover:underline">Sign In</a>
-                </label>
-              </div>
-              
-              <button 
-                type="submit" 
-                className="w-full bg-[#4F39F6] font-semibold text-white py-2 rounded-lg hover:bg-blue-600 transition duration-300"
-              >
-                <span className="relative z-10">Sign Up</span>
-              </button>
-            </form>
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    customer_name: "",
+    customer_email: "",
+    customer_phone_number: "",
+    password: "",
+    confirmPassword: ""
+  });
 
-          </div>
+  const [errorMessage, setErrorMessage] = useState(""); // <- Tambahan untuk tampilkan error
+
+  const handleChange = (e) => {
+    setFormData({...formData, [e.target.name]: e.target.value});
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrorMessage(""); // Reset error sebelum submit
+
+    if (formData.password !== formData.confirmPassword) {
+      setErrorMessage("Passwords do not match!");
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://localhost:8000/api/register', {
+        customer_name: formData.customer_name,
+        customer_email: formData.customer_email,
+        customer_phone_number: formData.customer_phone_number,
+        password: formData.password,
+      }, {
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (response.data.success) {
+        alert("Registration successful! Please login.");
+        navigate("/login");
+      } else {
+        setErrorMessage("Registration failed. Please try again.");
+      }
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.errors) {
+        // Kalau ada validation error dari Laravel
+        const errors = error.response.data.errors;
+        const firstError = Object.values(errors)[0][0]; // Ambil error pertama
+        setErrorMessage(firstError);
+      } else {
+        setErrorMessage("An unexpected error occurred. Please try again.");
+      }
+    }
+  };
+
+  return (
+    <div className="flex h-screen w-full font-jakarta">
+      <div className="w-1/2 bg-blue-500 flex items-center justify-center">
+        <img src="/Dummy 1.jpg" alt="" className="w-full h-full object-cover"/>
+      </div>
+
+      <div className="w-1/2 flex items-center justify-center bg-[#151523]">
+        <div className="w-full max-w-lg">
+          <img src="/Logo CLOVIO.svg" className="pb-10" alt="" />
+          <h2 className="text-2xl font-bold text-white mb-6">Create your account</h2>
+
+          {/* Show error message */}
+          {errorMessage && (
+            <div className="mb-4 bg-red-100 text-red-700 p-3 rounded">
+              {errorMessage}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4 flex gap-6">
+              <input name="customer_name" type="text" placeholder="Full Name" onChange={handleChange}
+                className="w-1/2 px-4 py-3 rounded-lg text-sm font-medium" required />
+              <input name="customer_phone_number" type="tel" placeholder="Phone Number" onChange={handleChange}
+                className="w-1/2 px-4 py-3 rounded-lg text-sm font-medium" required />
+            </div>
+            <div className="mb-4 flex gap-6">
+              <input name="customer_email" type="email" placeholder="Email" onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg text-sm font-medium" required />
+            </div>
+            <div className="mb-4 flex gap-6">
+              <input name="password" type="password" placeholder="Password" onChange={handleChange}
+                className="w-1/2 px-4 py-3 rounded-lg text-sm font-medium" required />
+              <input name="confirmPassword" type="password" placeholder="Confirm Password" onChange={handleChange}
+                className="w-1/2 px-4 py-3 rounded-lg text-sm font-medium" required />
+            </div>
+            <button type="submit" className="w-full bg-[#4F39F6] text-white py-2 rounded-lg font-semibold hover:bg-blue-600 transition duration-300">
+              Sign Up
+            </button>
+          </form>
         </div>
       </div>
-    );
+    </div>
+  );
 };
-  
+
 export default Register;
