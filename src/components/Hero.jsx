@@ -24,11 +24,11 @@ const Hero = () => {
     };
     
     const brand = [
-        { image: "/adidas.png", link: "/catalog/adidas" },
-        { image: "/nike.png", link: "/catalog/nike" },
-        { image: "/puma.png", link: "/catalog/puma" },
-        { image: "/underarmour.png", link: "/catalog/underarmour" },
-        { image: "/newbalance.png", link: "/catalog/newbalance" }
+        { image: "/adidas.png", link: "/Catalog" },
+        { image: "/nike.png", link: "/Catalog" },
+        { image: "/puma.png", link: "/Catalog" },
+        { image: "/underarmour.png", link: "/Catalog" },
+        { image: "/newbalance.png", link: "/Catalog" }
     ];
     
     const brandImage = [

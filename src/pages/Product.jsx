@@ -20,7 +20,7 @@ const Product = () => {
         <div className="w-full min-h-screen flex items-center justify-center bg-[#FFF8E8] py-6 px-4">
             <div className="flex w-full max-w-7xl rounded-xl bg-[#fff7e6] gap-6">
                 {/* Image Container */}
-                <div className="flex-shrink-0 flex justify-center items-center border-2 border-blue-400 rounded-xl p-4" 
+                <div className="flex-shrink-0 flex justify-center items-center border-2 border-[#151523] rounded-xl p-4" 
                     style={{width: '650px', height: '650px'}}>
                     <img 
                         src={productData.image} 
@@ -45,18 +45,18 @@ const Product = () => {
 
                         <div className="flex items-center gap-4">
                             <p className="text-xl font-medium">Category</p>
-                            <button className="bg-gray-200 px-6 py-1.5 rounded-full text-base font-semibold">{productData.category}</button>
+                            <button className="bg-[#151523] text-[#FFF8E8] px-6 py-1.5 rounded-full text-base font-semibold hover:text-blue-600">{productData.category}</button>
                         </div>
 
                         <div className="space-y-2">
                             <p className="text-xl font-medium">Size</p>
                             <div className="flex flex-wrap gap-3">
-                                <button className="bg-gray-200 px-6 py-2 rounded-lg text-base">S</button>
-                                <button className="bg-gray-200 px-6 py-2 rounded-lg text-base">M</button>
-                                <button className="bg-gray-200 px-6 py-2 rounded-lg text-base">L</button>
-                                <button className="bg-gray-200 px-6 py-2 rounded-lg text-base">XL</button>
-                                <button className="bg-gray-200 px-6 py-2 rounded-lg text-base">2XL</button>
-                                <button className="bg-gray-200 px-6 py-2 rounded-lg text-base">3XL</button>
+                                <button className="bg-[#151523] text-[#FFF8E8] px-6 py-2 rounded-lg text-base hover:text-blue-600">S</button>
+                                <button className="bg-[#151523] text-[#FFF8E8] px-6 py-2 rounded-lg text-base hover:text-blue-600">M</button>
+                                <button className="bg-[#151523] text-[#FFF8E8] px-6 py-2 rounded-lg text-base hover:text-blue-600">L</button>
+                                <button className="bg-[#151523] text-[#FFF8E8] px-6 py-2 rounded-lg text-base hover:text-blue-600">XL</button>
+                                <button className="bg-[#151523] text-[#FFF8E8] px-6 py-2 rounded-lg text-base hover:text-blue-600">2XL</button>
+                                <button className="bg-[#151523] text-[#FFF8E8] px-6 py-2 rounded-lg text-base hover:text-blue-600">3XL</button>
                             </div>
                         </div>
 
@@ -66,7 +66,7 @@ const Product = () => {
                         </div>
                     </div>
 
-                    <button className="bg-gray-300 w-full text-center text-xl py-3 rounded-lg font-semibold hover:bg-gray-400">
+                    <button className="bg-[#151523] w-full text-center text-[#FFF8E8] text-xl py-3 rounded-lg font-semibold hover:text-blue-600">
                         Add To Cart
                     </button>
                 </div>

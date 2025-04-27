@@ -5,14 +5,15 @@ import { FaSearch } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 
 const productItems = [
-  { name: "T-Shirts", icon: "👕", link: "/t-shirts" },
-  { name: "Hoodie", icon: "🧥", link: "/hoodies" },
-  { name: "Jacket", icon: "🧥", link: "/jackets" },
-  { name: "Vest", icon: "🦺", link: "/vests" },
+  { name: "T-Shirts", icon: "👕", link: "/Product" },
+  { name: "Hoodie", icon: "🧥", link: "/Product" },
+  { name: "Jacket", icon: "🧥", link: "/Product" },
+  { name: "Vest", icon: "🦺", link: "/Product" },
 ];
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -20,19 +21,19 @@ const Navbar = () => {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
-    }  
+    }
   };
 
   return (
     <>
       <nav className="bg-[#151523] shadow-lg py-3 px-10 flex items-center justify-between rounded-full mx-24 mt-5 mb-5 backdrop-blur-md border border-gray-700">
         <div className="">
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            strokeWidth="2.8" 
-            stroke="currentColor" 
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="2.8"
+            stroke="currentColor"
             className="size-12 mr-12 text-white hover:text-blue-600 cursor-pointer transition-colors"
             onClick={toggleSidebar}
           >
@@ -55,15 +56,37 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center space-x-8">
-          <Link to="/cart" className="text-gray-700 hover:text-blue-600">
+          <Link to="/cart" className="text-white hover:text-blue-600 transition-colors">
             <FaShoppingCart size={22} />
           </Link>
-          <Link
-            to="/login"
-            className="bg-[#FFF8E8] text-[#151523] px-6 py-2 rounded-full font-blinky hover:bg-blue-600"
-          >
-            Sign Up
-          </Link>
+
+          {/* New Profile Button */}
+          <div className="relative">
+            <Link
+              to="/login"
+              className="relative group"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-8 h-8 text-white hover:text-blue-600 transition-colors" // Increased icon size
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                />
+              </svg>
+
+              {/* Updated Hover Tooltip with larger text and padding */}
+              <div className="absolute invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300 -bottom-14 left-1/2 -translate-x-1/2 whitespace-nowrap bg-[#151523] text-[#FFF8E8] text-base font-bold py-3 px-16 rounded-lg shadow-lg border border-gray-700">
+                Sign in
+              </div>
+            </Link>
+          </div>
         </div>
       </nav>
 
@@ -77,8 +100,8 @@ const Navbar = () => {
             <Link to="/" onClick={toggleSidebar}>
               <img src="/Logo CLOVIO.svg" alt="Logo CLOVIO" className="h-8" />
             </Link>
-            <IoClose 
-              size={24} 
+            <IoClose
+              size={24}
               className="text-white hover:text-blue-600 cursor-pointer"
               onClick={toggleSidebar}
             />
@@ -88,7 +111,7 @@ const Navbar = () => {
             <h2 className="text-white text-lg font-semibold mb-4">Products Catalog</h2>
             <div className="grid grid-cols-2 gap-4">
               {productItems.map((item) => (
-                <Link 
+                <Link
                   key={item.name}
                   to={item.link}
                   onClick={toggleSidebar}
