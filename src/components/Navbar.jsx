@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
@@ -14,6 +14,19 @@ const productItems = [
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Add this state
+  const profileRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setShowProfileDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -60,32 +73,99 @@ const Navbar = () => {
             <FaShoppingCart size={22} />
           </Link>
 
-          {/* New Profile Button */}
-          <div className="relative">
-            <Link
-              to="/login"
-              className="relative group"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-8 h-8 text-white hover:text-blue-600 transition-colors" // Increased icon size
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                />
-              </svg>
+          {/* Profile Section */}
+          <div className="relative" ref={profileRef}>
+            {isAuthenticated ? (
+              // Profile Button and Dropdown for authenticated users
+              <div className="relative">
+                <button
+                  onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+                  className="relative group"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    className="w-8 h-8 text-white hover:text-blue-600 transition-colors"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                    />
+                  </svg>
+                </button>
 
-              {/* Updated Hover Tooltip with larger text and padding */}
-              <div className="absolute invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300 -bottom-14 left-1/2 -translate-x-1/2 whitespace-nowrap bg-[#151523] text-[#FFF8E8] text-base font-bold py-3 px-16 rounded-lg shadow-lg border border-gray-700">
-                Sign in
+                {/* Profile Dropdown Menu */}
+                {showProfileDropdown && (
+                  <div className="absolute right-0 mt-2 w-48 bg-[#151523] rounded-lg shadow-lg border border-gray-700 overflow-hidden">
+                    <div className="p-4 border-b border-gray-700">
+                      <p className="text-[#FFF8E8] font-medium">John Doe</p>
+                      <p className="text-gray-400 text-sm">john@example.com</p>
+                    </div>
+                    <div className="py-2">
+                      <Link
+                        to="/profile"
+                        className="block px-4 py-2 text-[#FFF8E8] hover:bg-blue-600 transition-colors"
+                        onClick={() => setShowProfileDropdown(false)}
+                      >
+                        My Profile
+                      </Link>
+                      <Link
+                        to="/orders"
+                        className="block px-4 py-2 text-[#FFF8E8] hover:bg-blue-600 transition-colors"
+                        onClick={() => setShowProfileDropdown(false)}
+                      >
+                        My Orders
+                      </Link>
+                      <Link
+                        to="/settings"
+                        className="block px-4 py-2 text-[#FFF8E8] hover:bg-blue-600 transition-colors"
+                        onClick={() => setShowProfileDropdown(false)}
+                      >
+                        Settings
+                      </Link>
+                      <button
+                        onClick={() => {
+                          setIsAuthenticated(false);
+                          setShowProfileDropdown(false);
+                        }}
+                        className="w-full text-left px-4 py-2 text-[#FFF8E8] hover:bg-blue-600 transition-colors"
+                      >
+                        Sign Out
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
-            </Link>
+            ) : (
+              // Sign In Button for non-authenticated users
+              <Link
+                to="/login"
+                className="relative group"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="w-8 h-8 text-white hover:text-blue-600 transition-colors"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                  />
+                </svg>
+
+                <div className="absolute invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300 -bottom-14 left-1/2 -translate-x-1/2 whitespace-nowrap bg-[#151523] text-[#FFF8E8] text-base font-bold py-3 px-16 rounded-lg shadow-lg border border-gray-700">
+                  Sign in
+                </div>
+              </Link>
+            )}
           </div>
         </div>
       </nav>
