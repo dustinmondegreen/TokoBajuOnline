@@ -31,7 +31,17 @@ class ProductWebController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $validated['product_id'] = 'P' . str_pad(Product::count() + 1, 4, '0', STR_PAD_LEFT);
+            // Cari product terakhir berdasarkan product_id terbesar
+        $lastProduct = Product::orderBy('product_id', 'desc')->first();
+
+        if (!$lastProduct) {
+            $nextNumber = 1;
+        } else {
+            $lastNumber = (int) substr($lastProduct->product_id, 1); // ambil angka
+            $nextNumber = $lastNumber + 1;
+        }
+
+        $validated['product_id'] = 'P' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('products', 'public');

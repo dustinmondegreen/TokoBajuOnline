@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Validator;
 
 class PaymentController extends Controller
 {
+    public function index()
+    {
+        $payments = Payment::all();
+        return response()->json(['payments' => $payments]);
+    }
+
     /**
      * Buat pembayaran baru
      */

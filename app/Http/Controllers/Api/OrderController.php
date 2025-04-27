@@ -74,9 +74,9 @@ class OrderController extends Controller
     }
 
     // Menampilkan detail order
-    public function show($id)
+    public function show($order_id)
     {
-        $order = Order::with(['customer', 'items.product'])->findOrFail($id);
+        $order = Order::with(['customer', 'items.product'])->where('order_id', $order_id)->firstOrFail();
         return response()->json($order);
     }
 

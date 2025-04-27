@@ -29,7 +29,19 @@ class ProductController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $validated['product_id'] = 'P' . str_pad(Product::count() + 1, 4, '0', STR_PAD_LEFT);
+                    // Cari product terakhir berdasarkan product_id (urut terbesar)
+            $lastProduct = Product::orderBy('product_id', 'desc')->first();
+
+            if (!$lastProduct) {
+                $nextNumber = 1;
+            } else {
+                // Ambil angka dari product_id, misal dari "P0007" -> 7
+                $lastNumber = (int) substr($lastProduct->product_id, 1);
+                $nextNumber = $lastNumber + 1;
+            }
+
+        // Generate ID baru
+        $validated['product_id'] = 'P' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('products', 'public');

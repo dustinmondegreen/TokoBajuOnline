@@ -13,14 +13,16 @@ class CustomerController extends Controller
     private function generateCustomerID()
     {
         $prefix = 'CU';
-        $lastNumber = Customer::count() + 1;
+        $lastCustomer = Customer::orderBy('customer_id', 'desc')->first();
     
-        do {
-            $id = $prefix . str_pad($lastNumber, 4, '0', STR_PAD_LEFT);
-            $lastNumber++;
-        } while (Customer::where('customer_id', $id)->exists());
+        if (!$lastCustomer) {
+            $nextNumber = 1;
+        } else {
+            $lastNumber = (int) substr($lastCustomer->customer_id, 2); // ambil angka dari CU0006 → 6
+            $nextNumber = $lastNumber + 1;
+        }
     
-        return $id;
+        return $prefix . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
     }
     /**
      * Display a listing of the resource.
@@ -74,8 +76,10 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Customer $customer)
+    public function update(Request $request,  $customer_id )
     {
+        $customer = Customer::where('customer_id', $customer_id)->firstOrFail();
+
         $validated = $request->validate([
             'customer_name' => 'sometimes|string|max:255',
             'customer_age' => 'sometimes|integer|min:0',
