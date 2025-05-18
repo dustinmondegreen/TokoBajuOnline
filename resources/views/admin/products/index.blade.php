@@ -1,55 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Product List</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
 </head>
-<body class="bg-gray-100 p-8">
-    <div class="max-w-7xl mx-auto bg-white p-6 rounded shadow">
-        <h1 class="text-2xl font-bold mb-6">Product List</h1>
+<body class="bg-[#E7F3FF] min-h-screen mt-16 p-6">
+    <div class="max-w-7xl mx-auto bg-white p-12 rounded-xl shadow-sm">
+        <div class="flex items-center justify-between mb-6">
+            <h1 class="text-2xl font-semibold text-gray-800">Product List</h1>
+            <a href="{{ route('admin.products.create') }}" class="bg-indigo-600 text-white px-6 py-2 rounded-xl hover:bg-indigo-700">Add Product</a>
+        </div>
 
         @if(session('success'))
-            <div class="bg-green-100 text-green-700 p-3 mb-4 rounded">
+            <div class="bg-green-100 text-green-800 px-4 py-3 rounded mb-4 border border-green-200">
                 {{ session('success') }}
             </div>
         @endif
 
-        <a href="{{ route('admin.products.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded mb-6 inline-block">Add Product</a>
-
         <div class="overflow-x-auto">
-            <table class="min-w-full bg-white">
-                <thead>
+            @php
+            function sortIcon($column, $sort, $direction) {
+                // Semua icon terang
+                if ($sort === $column) {
+                    return $direction === 'asc'
+                        ? '<i data-feather="chevron-up" class="w-4 h-4 inline ml-1 text-indigo-600"></i>'
+                        : '<i data-feather="chevron-down" class="w-4 h-4 inline ml-1 text-indigo-600"></i>';
+                }
+                // Kolom lain warna abu-abu terang
+                return '<i data-feather="chevron-up" class="w-4 h-4 inline ml-1 text-gray-500"></i>';
+            }
+            @endphp
+
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-[#F2F7FB]">
                     <tr>
-                        <th class="py-2 px-4 border-b">Image</th>
-                        <th class="py-2 px-4 border-b">Name</th>
-                        <th class="py-2 px-4 border-b">Category</th>
-                        <th class="py-2 px-4 border-b">Price</th>
-                        <th class="py-2 px-4 border-b">Stock</th>
-                        <th class="py-2 px-4 border-b">Action</th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 rounded-tl-xl">Image</th>
+
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">
+                            <a href="?sort=product_name&direction={{ ($sort == 'product_name' && $direction == 'asc') ? 'desc' : 'asc' }}" class="flex items-center">
+                                Name {!! sortIcon('product_name', $sort, $direction) !!}
+                            </a>
+                        </th>
+
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">
+                            <a href="?sort=category&direction={{ ($sort == 'category' && $direction == 'asc') ? 'desc' : 'asc' }}" class="flex items-center">
+                                Category {!! sortIcon('category', $sort, $direction) !!}
+                            </a>
+                        </th>
+
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">
+                            <a href="?sort=price&direction={{ ($sort == 'price' && $direction == 'asc') ? 'desc' : 'asc' }}" class="flex items-center">
+                                Price {!! sortIcon('price', $sort, $direction) !!}
+                            </a>
+                        </th>
+
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">
+                            <a href="?sort=quantity&direction={{ ($sort == 'quantity' && $direction == 'asc') ? 'desc' : 'asc' }}" class="flex items-center">
+                                Stock {!! sortIcon('quantity', $sort, $direction) !!}
+                            </a>
+                        </th>
+
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600 rounded-tr-xl">Action</th>
                     </tr>
                 </thead>
-                <tbody>
+
+                <tbody class="divide-y divide-gray-100">
                     @foreach($products as $product)
-                    <tr class="text-center">
-                        <td class="py-2 px-4 border-b">
+                    <tr class="odd:bg-[#FAFBFD] even:bg-white">
+                        <td class="px-6 py-4">
                             @if($product->image)
-                                <img src="{{ asset($product->image) }}" class="h-16 mx-auto rounded">
+                                <img src="{{ asset($product->image) }}" class="h-12 w-12 object-cover rounded" />
                             @else
-                                No Image
+                                <span class="text-gray-400 italic">No Image</span>
                             @endif
                         </td>
-                        <td class="py-2 px-4 border-b">{{ $product->product_name }}</td>
-                        <td class="py-2 px-4 border-b">{{ $product->category }}</td>
-                        <td class="py-2 px-4 border-b">Rp {{ number_format($product->price, 0, ',', '.') }}</td>
-                        <td class="py-2 px-4 border-b">{{ $product->quantity }}</td>
-                        <td class="py-2 px-4 border-b">
-                            <a href="{{ route('admin.products.edit', $product->product_id) }}" class="bg-yellow-400 text-white px-2 py-1 rounded">Edit</a>
-                            <form action="{{ route('admin.products.destroy', $product->product_id) }}" method="POST" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded" onclick="return confirm('Are you sure?')">Delete</button>
-                            </form>
+                        <td class="px-6 py-4">{{ $product->product_name }}</td>
+                        <td class="px-6 py-4">{{ $product->category }}</td>
+                        <td class="px-6 py-4">Rp {{ number_format($product->price, 0, ',', '.') }}</td>
+                        <td class="px-6 py-4">{{ $product->quantity }}</td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center">
+                                <a href="{{ route('admin.products.edit', $product->product_id) }}" 
+                                   class="text-yellow-500 hover:text-yellow-600 p-2 rounded-full hover:bg-yellow-100" 
+                                   title="Edit">
+                                    <i data-feather="edit" class="w-6 h-6"></i>
+                                </a>
+                                <form action="{{ route('admin.products.destroy', $product->product_id) }}" method="POST" onsubmit="return confirm('Are you sure?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" 
+                                            class="text-red-500 hover:text-red-600 p-2 rounded-full hover:bg-red-100" 
+                                            title="Delete">
+                                        <i data-feather="trash-2" class="w-6 h-6"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     @endforeach
@@ -57,5 +104,9 @@
             </table>
         </div>
     </div>
+
+    <script>
+        feather.replace()
+    </script>
 </body>
 </html>

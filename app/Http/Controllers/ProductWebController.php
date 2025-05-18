@@ -8,11 +8,27 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductWebController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::all();
-        return view('admin.products.index', compact('products'));
+        $sort = $request->get('sort', 'product_name');
+        $direction = $request->get('direction', 'asc');
+
+        $allowedSorts = ['product_name', 'category', 'price', 'quantity'];
+
+        if (!in_array($sort, $allowedSorts)) {
+            $sort = 'product_name';
+        }
+        if (!in_array($direction, ['asc', 'desc'])) {
+            $direction = 'asc';
+        }
+
+        $products = Product::orderBy($sort, $direction)->get();
+
+        return view('admin.products.index', compact('products', 'sort', 'direction'));
     }
+
+
+
 
     public function create()
     {
@@ -100,4 +116,5 @@ class ProductWebController extends Controller
 
         return redirect()->route('admin.products.index')->with('success', 'Product successfully deleted.');
     }
+
 }
