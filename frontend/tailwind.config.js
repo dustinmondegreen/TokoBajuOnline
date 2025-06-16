@@ -8,7 +8,7 @@ export default {
     extend: {
       fontFamily: {
         blinky: ["Blinky-Star", "sans-serif"],
-        jakarta: ["Plus Jakarta Sans", "sans-serif"],
+        jakarta: ['"Plus Jakarta Sans"', 'sans-serif'],
       },
     },
   },

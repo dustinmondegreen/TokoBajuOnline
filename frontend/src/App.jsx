@@ -10,14 +10,13 @@ import Registration from "./pages/Registration";
 import Footer from "./components/Footer"
 import Receipt from "./pages/Receipt"; 
 import ReceiptPage from "./pages/ReceiptPage";
-
-
+import ForgetPassword from "./pages/ForgetPasswrod";
 
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-[#FFF8E8] w-full">
-        <Navbar />
+      <div className="min-h-screen bg-white w-full">
+        <Navbar/>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/catalog" element={<Catalog />} />
@@ -25,6 +24,7 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/login" element={<Login />} />
           <Route path="/registration" element={<Registration />} />
+          <Route path="/forgetpassword" element={<ForgetPassword />} />
           <Route path="/product" element={<Product/>} />
           <Route path="/adminHome" element={<adminHome />} />
           <Route path="/receipt/:orderId" element={<Receipt />} />

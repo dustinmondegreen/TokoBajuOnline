@@ -17,18 +17,16 @@ const Cart = () => {
             const storedUser = JSON.parse(localStorage.getItem('user'));
             const response = await axios.get('http://localhost:8000/api/cart');
 
-            // Filter hanya cart yang punya customer_id user yang login
             const customerCart = response.data.data.filter(item => item.customer_id === storedUser.customer_id);
 
-            // Map supaya cocok tampil di frontend
             const mappedCart = customerCart.map(item => ({
                 id: item.cart_id,
                 name: item.product.product_name,
                 itemNo: item.product.product_id,
                 color: item.product.color,
-                quantity: 1, // default qty 1 (kalau mau nambah qty nanti tinggal tambah field baru)
+                quantity: 1,
                 price: parseFloat(item.product.price),
-                image: item.product.image, // kamu bisa render nanti
+                image: item.product.image,
             }));
 
             setCartItems(mappedCart);
@@ -55,10 +53,8 @@ const Cart = () => {
         try {
             await axios.delete(`http://localhost:8000/api/cart/${cartId}`);
             setCartItems(prev => prev.filter(item => item.id !== cartId));
-            alert('🗑️ Item removed from cart');
         } catch (error) {
             console.error('❌ Failed to remove item:', error);
-            alert('Failed to remove item');
         }
     };
 
@@ -73,119 +69,136 @@ const Cart = () => {
     };
 
     return (
-        <div className="flex justify-center p-16 bg-[#FFF8E8] min-h-screen">
-            <div className="flex flex-col md:flex-row gap-8 w-full max-w-6xl">
-                {/* Shopping Bag Section */}
-                <div className="w-full md:w-2/3 bg-[#151523] p-6 rounded-lg shadow-sm">
-                    <h1 className="text-2xl font-bold mb-6 text-[#FFF8E8]">MY SHOPPING BAG</h1>
-                    
-                    {/* Headers */}
-                    <div className="flex justify-between border-b border-gray-700 pb-2 mb-4">
-                        <h2 className="font-semibold text-lg w-2/3 text-[#FFF8E8]">PRODUCT</h2>
-                        <h2 className="font-semibold text-lg text-right w-1/3 text-[#FFF8E8]">PRICE</h2>
+        <div className="flex justify-center p-8 bg-gray-50 min-h-screen font-jakarta mt-14">
+            <div className="flex flex-col md:flex-row gap-10 w-full max-w-6xl">
+                <div className="w-full md:w-2/3 bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+                    <h1 className="text-3xl font-medium text-gray-900 mb-8 tracking-tight">Your Shopping Bag</h1>
+
+                    <div className="hidden md:flex justify-between border-b border-gray-200 pb-4 mb-6 text-gray-600 font-semibold text-sm uppercase">
+                        <h2 className="w-2/5">Product Details</h2>
+                        <h2 className="w-1/5 text-center">Price</h2>
+                        <h2 className="w-1/5 text-center">Quantity</h2>
+                        <h2 className="w-1/5 text-right">Total</h2>
                     </div>
 
-                    {/* Item List */}
-                    {cartItems.map((item) => (
-                        <div key={item.id} className="border-b border-gray-700 pb-6 mb-6">
-                            <div className="flex gap-4">
-                                <div className="w-24 h-24 bg-gray-700 rounded">
-                                <img 
-                                    src={item.image.startsWith('/storage/') ? `http://localhost:8000${item.image}` : item.image} 
-                                    alt={item.name}
-                                    className="w-full h-full object-cover"
-                                />
-                                </div>
-                                <div className="flex-1">
-                                    <h3 className="font-bold text-[#FFF8E8]">{item.name}</h3>
-                                    <div className="text-sm text-gray-400 mt-1">
-                                        <p>Item No: {item.itemNo}</p>
-                                        <p>Size: {item.size}</p>
-                                        <p>Color: {item.color}</p>
-                                        {editingItemId === item.id ? (
-                                            <div className="flex items-center gap-2 mt-1">
-                                                <label htmlFor="qty" className="text-[#FFF8E8] text-xs">Qty:</label>
-                                                <input
-                                                    type="number"
-                                                    min="1"
-                                                    value={newQuantity}
-                                                    onChange={(e) => setNewQuantity(parseInt(e.target.value))}
-                                                    className="w-16 p-1 rounded bg-gray-600 text-white text-xs"
-                                                />
-                                            </div>
-                                        ) : (
-                                            <p>Qty: {item.quantity}</p>
-                                        )}
-                                    </div>
-                                    <div className="flex gap-4 mt-3">
-                                        {editingItemId === item.id ? (
-                                            <button 
-                                                onClick={() => handleSaveEdit(item.id)}
-                                                className="text-green-400 hover:text-green-300 text-sm font-medium"
-                                            >
-                                                SAVE
-                                            </button>
-                                        ) : (
-                                            <button 
-                                                onClick={() => handleEditClick(item.id, item.quantity)}
-                                                className="text-cyan-400 hover:text-cyan-300 text-sm font-medium"
-                                            >
-                                                EDIT
-                                            </button>
-                                        )}
-                                        <button 
-                                            onClick={() => handleRemove(item.id)}
-                                            className="text-red-400 hover:text-red-300 text-sm font-medium"
-                                        >
-                                            REMOVE
-                                        </button>
-                                    </div>
-                                </div>
-                                <div className="w-1/3 text-right">
-                                    <p className="font-semibold text-[#FFF8E8]">Rp. {item.price.toLocaleString()}</p>
-                                </div>
-                            </div>
+                    {cartItems.length === 0 ? (
+                        <div className="text-center py-12 text-gray-600">
+                            <p className="text-lg mb-4">Your shopping bag is empty.</p>
+                            <Link to="/catalog" className="text-blue-600 hover:underline font-medium">
+                                Continue Shopping
+                            </Link>
                         </div>
-                    ))}
+                    ) : (
+                        <div className="space-y-8">
+                            {cartItems.map((item) => (
+                                <div key={item.id} className="flex flex-col md:flex-row items-center justify-between border-b border-gray-100 pb-6">
+                                    <div className="flex items-center gap-6 w-full md:w-2/5 mb-4 md:mb-0">
+                                        <img
+                                            src={item.image.startsWith('/storage/') ? `http://localhost:8000${item.image}` : item.image}
+                                            alt={item.name}
+                                            className="w-28 h-28 object-cover rounded-lg shadow-sm"
+                                        />
+                                        <div>
+                                            <h3 className="font-semibold text-lg text-gray-900">{item.name}</h3>
+                                            <p className="text-sm text-gray-500">Item No: {item.itemNo}</p>
+                                            {item.size && <p className="text-sm text-gray-500">Size: {item.size}</p>}
+                                            <p className="text-sm text-gray-500">Color: {item.color}</p>
+                                            <div className="flex gap-4 mt-3">
+                                                {editingItemId === item.id ? (
+                                                    <button
+                                                        onClick={() => handleSaveEdit(item.id)}
+                                                        className="text-green-600 hover:text-green-700 text-sm font-medium transition-colors"
+                                                    >
+                                                        Save
+                                                    </button>
+                                                ) : (
+                                                    <button
+                                                        onClick={() => handleEditClick(item.id, item.quantity)}
+                                                        className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors"
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                )}
+                                                <button
+                                                    onClick={() => handleRemove(item.id)}
+                                                    className="text-red-600 hover:text-red-700 text-sm font-medium transition-colors"
+                                                >
+                                                    Remove
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="w-full md:w-1/5 text-center text-lg font-medium text-gray-800 mb-2 md:mb-0">
+                                        Rp {item.price.toLocaleString('id-ID')}
+                                    </div>
+
+                                    <div className="w-full md:w-1/5 flex justify-center items-center mb-4 md:mb-0">
+                                        {editingItemId === item.id ? (
+                                            <input
+                                                type="number"
+                                                min="1"
+                                                value={newQuantity}
+                                                onChange={(e) => setNewQuantity(parseInt(e.target.value))}
+                                                className="w-20 p-2 rounded-md border border-gray-300 text-center text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            />
+                                        ) : (
+                                            <span className="text-lg font-medium text-gray-800">{item.quantity}</span>
+                                        )}
+                                    </div>
+
+                                    <div className="w-full md:w-1/5 text-right text-xl font-semibold text-gray-900">
+                                        Rp {(item.price * item.quantity).toLocaleString('id-ID')}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
-                {/* Summary Section */}
-                <div className="w-full md:w-1/3 bg-[#151523] p-6 rounded-lg shadow-sm h-fit sticky top-6">
-                    <h1 className="text-2xl font-bold mb-4 text-[#FFF8E8]">SUMMARY</h1>
-                    <hr className="border-gray-700 my-2" />
+                <div className="w-full md:w-1/3 bg-white p-8 rounded-xl shadow-lg border border-gray-200 h-fit sticky top-24">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-6">Order Summary</h2>
+                    <hr className="border-gray-200 my-4" />
 
-                    <div className="space-y-3 mb-4">
-                        <div className="flex justify-between">
-                            <p className="text-gray-400">Subtotal</p>
-                            <p className="font-semibold text-[#FFF8E8]">Rp. {calculateTotal().toLocaleString()}</p>
+                    <div className="space-y-4 mb-6">
+                        <div className="flex justify-between text-gray-700">
+                            <span>Subtotal</span>
+                            <span>Rp {calculateTotal().toLocaleString('id-ID')}</span>
                         </div>
-                        <div className="flex justify-between">
-                            <p className="text-gray-400">Shipping</p>
-                            <p className="font-semibold text-[#FFF8E8]">Rp. 0</p>
+                        <div className="flex justify-between text-gray-700">
+                            <span>Shipping</span>
+                            <span>Rp 0</span>
                         </div>
-                        <div className="flex justify-between">
-                            <p className="text-gray-400">Sales Tax</p>
-                            <p className="font-semibold text-[#FFF8E8]">Rp. 0</p>
+                        <div className="flex justify-between text-gray-700">
+                            <span>Sales Tax</span>
+                            <span>Rp 0</span>
                         </div>
                     </div>
 
-                    <hr className="border-gray-700 my-2" />
+                    <hr className="border-gray-300 my-4" />
 
-                    <div className="flex justify-between my-4">
-                        <p className="font-bold text-[#FFF8E8]">Estimated Total</p>
-                        <p className="font-bold text-lg text-[#FFF8E8]">Rp. {calculateTotal().toLocaleString()}</p>
+                    <div className="flex justify-between my-6">
+                        <p className="font-bold text-xl text-gray-900">Estimated Total</p>
+                        <p className="font-bold text-xl text-gray-900">Rp {calculateTotal().toLocaleString('id-ID')}</p>
                     </div>
 
-                    <hr className="border-gray-700 my-2" />
-
-                    <button 
+                    <button
                         onClick={handleCheckout}
-                        className="w-full bg-[#FFF8E8] text-[#151523] font-bold py-3 rounded-lg hover:bg-gray-200 transition duration-300 mt-6 mb-4"
+                        className={`w-full py-4 rounded-xl font-bold text-lg transition-all duration-300
+                            ${cartItems.length === 0
+                                ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                                : 'bg-blue-600 text-white hover:bg-blue-700 shadow-md'
+                            }`}
+                        disabled={cartItems.length === 0}
                     >
-                        CHECKOUT
+                        CHECKOUT →
                     </button>
 
-                    <p className="text-center text-gray-400 text-sm">Need Help? Call us at 888</p>
+                    <Link to="/catalog" className="block text-center text-blue-600 hover:underline mt-6 text-sm font-medium">
+                        Continue Shopping
+                    </Link>
+
+                    <p className="text-center text-gray-500 text-sm mt-8">Need Help? Call us at 0812 3456 7890</p>
                 </div>
             </div>
         </div>

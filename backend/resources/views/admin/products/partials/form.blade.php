@@ -7,8 +7,14 @@
 
     <div>
         <label class="block mb-2 font-semibold text-indigo-700 text-lg">Category</label>
-        <input type="text" name="category" value="{{ old('category', $product->category ?? '') }}" 
-            class="w-full border border-indigo-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+        <select name="category" class="w-full border border-indigo-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+            <option value="">Select a category</option>
+            <option value="Shirt" {{ (old('category', $product->category ?? '') == 'Shirt') ? 'selected' : '' }}>Shirt</option>
+            <option value="Hoodie" {{ (old('category', $product->category ?? '') == 'Hoodie') ? 'selected' : '' }}>Hoodie</option>
+            <option value="Jacket" {{ (old('category', $product->category ?? '') == 'Jacket') ? 'selected' : '' }}>Jacket</option>
+            <option value="Shorts" {{ (old('category', $product->category ?? '') == 'Shorts') ? 'selected' : '' }}>Shorts</option>
+            <option value="Hat" {{ (old('category', $product->category ?? '') == 'Hat') ? 'selected' : '' }}>Hat</option>
+        </select>
     </div>
 
     <div>

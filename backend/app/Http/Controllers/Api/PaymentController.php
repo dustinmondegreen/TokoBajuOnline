@@ -24,7 +24,7 @@ class PaymentController extends Controller
         // Validasi request
         $validator = Validator::make($request->all(), [
             'order_id' => 'required|exists:orders,order_id',
-            'payment_method' => 'required|in:e_wallet,virtual_account,bank',
+            'payment_method' => 'required|in:BCA,BRI,Mandiri',
         ]);
 
         if ($validator->fails()) {

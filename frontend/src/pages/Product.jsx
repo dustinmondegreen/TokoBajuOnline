@@ -6,59 +6,14 @@ const Product = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const productData = location.state?.productData;
+    const [selectedSize, setSelectedSize] = useState('');
+    const [quantity, setQuantity] = useState(1);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [ratingValue, setRatingValue] = useState(0);
-    const [averageRating, setAverageRating] = useState(null);
-    const [hasRated, setHasRated] = useState(false);
 
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
         setIsAuthenticated(!!storedUser);
-        fetchAverageRating();
     }, []);
-
-    const fetchAverageRating = async () => {
-        try {
-            const res = await axios.get(`http://localhost:8000/api/reviews/by-product/${productData.id}`);
-            const reviews = res.data;
-            if (reviews.length > 0) {
-                const avg = reviews.reduce((sum, r) => sum + Number(r.rating), 0) / reviews.length;
-                setAverageRating(avg.toFixed(1));
-            } else {
-                setAverageRating(null);
-            }
-        } catch (err) {
-            console.error("Failed to fetch reviews:", err);
-        }
-    };
-
-    const handleRatingSubmit = async () => {
-        const storedUser = JSON.parse(localStorage.getItem("user"));
-        if (!storedUser) {
-            alert("Login required to rate product.");
-            navigate("/login");
-            return;
-        }
-
-        try {
-            await axios.post("http://localhost:8000/api/reviews", {
-                product_id: productData.id,
-                customer_id: storedUser.customer_id,
-                rating: ratingValue
-            });
-            setHasRated(true);
-            fetchAverageRating();
-            alert("Thank you for your rating!");
-        } catch (err) {
-            if (err.response?.data?.message) {
-            alert(err.response.data.message);
-            } else if (err.response?.data?.error) {
-            alert(JSON.stringify(err.response.data.error));
-            } else {
-            alert("Gagal mengirim review. Silakan coba lagi.");
-            }
-          }
-    };
 
     if (!productData) {
         navigate('/catalog');
@@ -70,118 +25,161 @@ const Product = () => {
         const storedUser = JSON.parse(localStorage.getItem('user'));
 
         if (!storedUser) {
-            navigate('/login', { 
+            navigate('/login', {
                 state: { from: location.pathname, productData: productData }
             });
+            return;
+        }
+
+        if (quantity < 1) {
+            alert("Quantity must be at least 1.");
+            return;
+        }
+
+        if (selectedSize === '' && productData.availableSizes && productData.availableSizes.length > 0) {
+            alert("Please select a size.");
             return;
         }
 
         try {
             const response = await axios.post('http://localhost:8000/api/cart', {
                 customer_id: storedUser.customer_id,
-                product_id: productData.id
+                product_id: productData.id,
+                quantity: quantity,
+                size: selectedSize
             });
 
-            console.log('✅ Product added to cart:', response.data);
+            console.log('Product added to cart:', response.data);
             alert('Product added to cart!');
             navigate('/cart');
 
         } catch (error) {
-            console.error('❌ Failed to add to cart:', error);
+            console.error('Failed to add to cart:', error);
             alert('Failed to add product to cart.');
         }
+    };
 
-        const fetchAverageRating = async () => {
-    try {
-        const res = await axios.get(`http://localhost:8000/api/reviews/by-product/${productData.id}`);
-        console.log("Fetched review list:", res.data); // ✅ DEBUG LINE
+    const handleBuyNow = async () => {
+        const storedUser = JSON.parse(localStorage.getItem('user'));
 
-        const reviews = res.data;
-
-        if (Array.isArray(reviews) && reviews.length > 0) {
-            const avg = reviews.reduce((sum, r) => sum + Number(r.rating), 0) / reviews.length;
-            console.log("Avg rating calculated:", avg); // ✅ DEBUG LINE
-            setAverageRating(avg.toFixed(1));
-        } else {
-            console.log("Reviews array is empty or invalid."); // ✅ DEBUG LINE
-            setAverageRating(null);
+        if (!storedUser) {
+            navigate('/login', {
+                state: { from: location.pathname, productData: productData }
+            });
+            return;
         }
-    } catch (err) {
-        console.error("Failed to fetch reviews:", err);
-    }
-};
+
+        if (quantity < 1) {
+            alert("Quantity must be at least 1.");
+            return;
+        }
+
+        if (selectedSize === '' && productData.availableSizes && productData.availableSizes.length > 0) {
+            alert("Please select a size.");
+            return;
+        }
+
+        try {
+            const response = await axios.post('http://localhost:8000/api/cart', {
+                customer_id: storedUser.customer_id,
+                product_id: productData.id,
+                quantity: quantity,
+                size: selectedSize
+            });
+
+            console.log('Product added for direct purchase:', response.data);
+            navigate('/checkout');
+        } catch (error) {
+            console.error('Failed to proceed with purchase:', error);
+        }
     };
 
     return (
-        <div className="w-full min-h-screen flex items-center justify-center bg-[#FFF8E8] py-6 px-4">
-            <div className="flex w-full max-w-7xl rounded-xl bg-[#fff7e6] gap-6">
-                {/* Image Section */}
-                <div
-                    className="flex-shrink-0 flex justify-center items-center border-2 border-[#151523] rounded-xl p-4"
-                    style={{ width: '650px', height: '650px' }}
-                >
-                    <img
-                        src={productData.image}
-                        alt={productData.name}
-                        className="rounded-lg object-contain w-full h-full"
-                    />
-                </div>
+        <div className="w-full min-h-screen flex flex-col lg:flex-row bg-white">
+            <div className="lg:w-1/2 flex items-center justify-center bg-[#F9F9F9]">
+                <img
+                    src={productData.image}
+                    alt={productData.name}
+                    className="object-contain h-full rounded-lg"
+                />
+            </div>
 
-                {/* Detail Section */}
-                <div className="flex flex-col justify-between p-4 text-[#333] h-[650px]">
-                    <div className="space-y-6">
+            <div className="lg:w-1/2 p-8 flex flex-col justify-between mt-24 mx-12">
+                <div className="space-y-12">
+                    <div className="border-b pb-4">
+                        <h1 className="text-5xl font-extrabold text-gray-900 mb-6">{productData.name}</h1>
+                        <p className="text-3xl font-semibold text-gray-800">Rp {productData.price}</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-lg text-gray-700">
                         <div className="space-y-2">
-                            <h1 className="text-4xl font-bold">{productData.name}</h1>
-                            <h1 className="text-4xl font-bold text-black">Rp {productData.price}</h1>
-                            <h2 className="text-2xl font-bold text-black">{productData.id}</h2>
+                            <p><span className="font-bold">Color:</span> {productData.color}</p>
+                            <p><span className="font-bold">Material:</span> {productData.material}</p>
                         </div>
-
-                        <div className="flex gap-6 text-base">
-                            <p>Color: <span className="font-medium">{productData.color}</span></p>
-                            <p>Material: <span className="font-medium">{productData.material}</span></p>
-                        </div>
-
-                        <div className="flex items-center gap-4">
-                            <p className="text-xl font-medium">Category</p>
-                            <button className="bg-[#151523] text-[#FFF8E8] px-6 py-1.5 rounded-full text-base font-semibold hover:text-blue-600">
-                                {productData.category}
-                            </button>
-                        </div>
-
-                        <div className="flex flex-col gap-2">
-                            <p className="text-lg font-medium">
-                                Average Rating: <span className="text-yellow-500">{averageRating ?? "No ratings yet"} ★</span>
+                        <div className="space-y-2">
+                            <p><span className="font-bold">Category:</span>
+                                <span className="">{productData.category}</span>
                             </p>
-                            {!hasRated && isAuthenticated && (
-                                <div className="flex items-center gap-2">
-                                    {[1, 2, 3, 4, 5].map((star) => (
-                                        <button
-                                            key={star}
-                                            onClick={() => setRatingValue(star)}
-                                            className={`text-2xl ${ratingValue >= star ? "text-yellow-500" : "text-gray-300"}`}
-                                        >
-                                            ★
-                                        </button>
-                                    ))}
-                                    <button
-                                        onClick={handleRatingSubmit}
-                                        disabled={!ratingValue}
-                                        className="ml-2 px-3 py-1 bg-blue-600 text-white rounded disabled:opacity-50"
-                                    >
-                                        Submit
-                                    </button>
-                                </div>
-                            )}
+                            <p><span className="font-bold">Availability:</span> {productData.quantity > 0 ? `${productData.quantity} in stock` : 'Out of stock'}</p>
                         </div>
+                    </div>
 
-                        <p className="text-lg font-medium">
-                            Qty: {productData.quantity}
+                    <div className="space-y-2">
+                        <h3 className="text-xl font-semibold text-gray-800">Product Details</h3>
+                        <p className="text-gray-700 leading-relaxed">
+                            {productData.description || "A high-quality product crafted with attention to detail. Perfect for any occasion, offering both comfort and style. Made from premium materials for durability."}
                         </p>
                     </div>
+
+                    {productData.availableSizes && productData.availableSizes.length > 0 && (
+                        <div>
+                            <h3 className="text-xl font-semibold text-gray-800 mb-3">Select Size:</h3>
+                            <div className="flex gap-3">
+                                {productData.availableSizes.map((size) => (
+                                    <button
+                                        key={size}
+                                        onClick={() => setSelectedSize(size)}
+                                        className={`px-5 py-2 border rounded-md font-medium transition-all duration-200
+                                            ${selectedSize === size
+                                                ? 'bg-black text-white border-black'
+                                                : 'bg-white text-gray-800 border-gray-300 hover:border-black'
+                                            }`}
+                                    >
+                                        {size}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    <div>
+                        <h3 className="text-xl font-semibold text-gray-800 mb-3">Quantity:</h3>
+                        <div className="flex items-center gap-4">
+                            <button
+                                onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
+                                className="px-4 py-2 border border-gray-300 rounded-md text-gray-800 text-lg hover:bg-gray-100 transition-colors"
+                            >
+                                -
+                            </button>
+                            <span className="text-xl font-semibold text-gray-900">{quantity}</span>
+                            <button
+                                onClick={() => setQuantity(prev => prev + 1)}
+                                className="px-4 py-2 border border-gray-300 rounded-md text-gray-800 text-lg hover:bg-gray-100 transition-colors"
+                            >
+                                +
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="mt-8 flex justify-between gap-4">
                     <button
                         onClick={handleAddToCart}
-                        className="bg-[#151523] w-full text-center text-[#FFF8E8] text-xl py-3 rounded-lg font-semibold hover:text-blue-600"
+                        className="w-full bg-black text-white text-xl py-4 rounded-md font-semibold hover:bg-gray-800 transition-colors duration-300 flex items-center justify-center gap-2"
                     >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                        </svg>
                         Add To Cart
                     </button>
                 </div>
@@ -191,4 +189,3 @@ const Product = () => {
 };
 
 export default Product;
-

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const registerImages = [
+const forgetPasswordImages = [
     "/zara (1).png",
     "/zara (2).png",
     "/zara (3).png",
@@ -33,23 +33,19 @@ const Typewriter = ({ text, delay, infinite }) => {
     return <span>{currentText}</span>;
 };
 
-const Register = () => {
+const ForgetPassword = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
-        customer_name: "",
         customer_email: "",
-        customer_phone_number: "",
-        password: "",
-        confirmPassword: ""
     });
-
     const [errorMessage, setErrorMessage] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentImageIndex((prevIndex) =>
-                (prevIndex + 1) % registerImages.length
+                (prevIndex + 1) % forgetPasswordImages.length
             );
         }, 2000);
 
@@ -63,46 +59,30 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrorMessage("");
-
-        if (formData.password !== formData.confirmPassword) {
-            setErrorMessage("Passwords do not match!");
-            return;
-        }
+        setSuccessMessage("");
 
         try {
-            const response = await axios.post('http://localhost:8000/api/register', {
-                customer_name: formData.customer_name,
+            const response = await axios.post('http://localhost:8000/api/forgot-password', {
                 customer_email: formData.customer_email,
-                customer_phone_number: formData.customer_phone_number,
-                password: formData.password,
             }, {
-                headers: {
-                    'Accept': 'application/json'
-                }
+                headers: { 'Accept': 'application/json' }
             });
 
             if (response.data.success) {
-                alert("Registration successful! Please login.");
-                navigate("/login");
+                setSuccessMessage("If your email is registered, you will receive a password reset link shortly.");
             } else {
-                setErrorMessage("Registration failed. Please try again.");
+                setErrorMessage(response.data.message || "Failed to send reset link. Please try again.");
             }
         } catch (error) {
-            console.error("Registration error:", error.response?.data || error.message);
-            if (error.response && error.response.data && error.response.data.errors) {
-                const errors = error.response.data.errors;
-                const firstError = Object.values(errors)[0][0];
-                setErrorMessage(firstError);
-            } else {
-                setErrorMessage("An unexpected error occurred. Please try again.");
-            }
+            console.error("Forgot password error:", error.response?.data || error.message);
+            setErrorMessage("An unexpected error occurred. Please try again.");
         }
     };
 
     return (
         <div className="flex h-screen font-sans">
             <div className="hidden lg:flex w-1/2 bg-gray-100 items-center justify-center relative overflow-hidden">
-                {registerImages.map((image, index) => (
+                {forgetPasswordImages.map((image, index) => (
                     <img
                         key={index}
                         src={image}
@@ -115,11 +95,11 @@ const Register = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end justify-center p-12 z-10">
                     <div className="text-center text-white">
                         <h3 className="text-4xl font-bold mb-3 drop-shadow-md">
-                            Join CLOVIO Community
+                            Forgot Your Password?
                         </h3>
                         <p className="text-xl max-w-md mx-auto drop-shadow-sm">
                             <Typewriter
-                                text="Create your account and unlock exclusive fashion experiences."
+                                text="Don't worry, we'll help you get back in style."
                                 delay={50}
                                 infinite={false}
                             />
@@ -131,8 +111,8 @@ const Register = () => {
             <div className="w-full lg:w-1/2 flex items-center justify-center bg-white p-8 lg:p-12 shadow-2xl z-10">
                 <div className="w-full max-w-md">
                     <div className="text-left mb-10">
-                        <h2 className="text-3xl font-bold text-gray-900 mb-2">Create Your Account</h2>
-                        <p className="text-gray-600 text-lg">Sign up to get started with CLOVIO.</p>
+                        <h2 className="text-3xl font-bold text-gray-900 mb-2">Reset Your Password</h2>
+                        <p className="text-gray-600 text-lg">Enter your email and we'll send you a reset link.</p>
                     </div>
 
                     {errorMessage && (
@@ -140,22 +120,13 @@ const Register = () => {
                             <span className="block sm:inline">{errorMessage}</span>
                         </div>
                     )}
+                    {successMessage && (
+                        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-md relative mb-6" role="alert">
+                            <span className="block sm:inline">{successMessage}</span>
+                        </div>
+                    )}
 
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        <div>
-                            <label htmlFor="customer_name" className="block text-sm font-medium text-gray-700 mb-2">
-                                Full Name
-                            </label>
-                            <input
-                                id="customer_name"
-                                name="customer_name"
-                                type="text"
-                                placeholder="Enter your full name"
-                                onChange={handleChange}
-                                className="w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition duration-200 text-base"
-                                required
-                            />
-                        </div>
                         <div>
                             <label htmlFor="customer_email" className="block text-sm font-medium text-gray-700 mb-2">
                                 Email Address
@@ -170,57 +141,15 @@ const Register = () => {
                                 required
                             />
                         </div>
-                        <div>
-                            <label htmlFor="customer_phone_number" className="block text-sm font-medium text-gray-700 mb-2">
-                                Phone Number
-                            </label>
-                            <input
-                                id="customer_phone_number"
-                                name="customer_phone_number"
-                                type="tel"
-                                placeholder="Enter your phone number"
-                                onChange={handleChange}
-                                className="w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition duration-200 text-base"
-                                required
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                                Password
-                            </label>
-                            <input
-                                id="password"
-                                name="password"
-                                type="password"
-                                placeholder="Enter your password"
-                                onChange={handleChange}
-                                className="w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition duration-200 text-base"
-                                required
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                                Confirm Password
-                            </label>
-                            <input
-                                id="confirmPassword"
-                                name="confirmPassword"
-                                type="password"
-                                placeholder="Confirm your password"
-                                onChange={handleChange}
-                                className="w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition duration-200 text-base"
-                                required
-                            />
-                        </div>
                         <button
                             type="submit"
                             className="w-full bg-black text-white py-3 rounded-lg font-semibold text-lg tracking-wide hover:bg-gray-800 transition duration-300 transform hover:scale-100"
                         >
-                            Sign Up
+                            Send Reset Link
                         </button>
                         <div className="text-center mt-6">
                             <p className="text-gray-600 text-sm">
-                                Already have an account?{" "}
+                                Remember your password?{" "}
                                 <a href="/login" className="font-medium text-blue-600 hover:text-blue-800 hover:underline transition-colors">
                                     Sign in here
                                 </a>
@@ -233,4 +162,4 @@ const Register = () => {
     );
 };
 
-export default Register;
+export default ForgetPassword;
