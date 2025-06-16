@@ -216,7 +216,7 @@ const Hero = () => {
                     <h1 className="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg">
                         CLOVIO
                     </h1>
-                    <p className="text-xl md:text-3xl font-medium tracking-wide drop-shadow-lg">
+                    <p className="text-xl md:text-3xl font-light tracking-wide drop-shadow-lg">
                         <Typewriter
                             text="Your ultimate destination for modern fashion."
                             delay={100}
