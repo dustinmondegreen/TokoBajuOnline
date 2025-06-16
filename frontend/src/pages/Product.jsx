@@ -151,26 +151,7 @@ const Product = () => {
                             </div>
                         </div>
                     )}
-
-                    <div>
-                        <h3 className="text-xl font-semibold text-gray-800 mb-3">Quantity:</h3>
-                        <div className="flex items-center gap-4">
-                            <button
-                                onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
-                                className="px-4 py-2 border border-gray-300 rounded-md text-gray-800 text-lg hover:bg-gray-100 transition-colors"
-                            >
-                                -
-                            </button>
-                            <span className="text-xl font-semibold text-gray-900">{quantity}</span>
-                            <button
-                                onClick={() => setQuantity(prev => prev + 1)}
-                                className="px-4 py-2 border border-gray-300 rounded-md text-gray-800 text-lg hover:bg-gray-100 transition-colors"
-                            >
-                                +
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                   </div>
 
                 <div className="mt-8 flex justify-between gap-4">
                     <button
