@@ -5,3 +5,24 @@
 **Teknologi yang Digunakan**
 - Frontend (React, Tailwind CSS, React Router DOM, Axios)
 - Backend (Laravel & MySQL)
+
+**Cara Penggunaan**
+jalankan apache dan mysql di xampp
+
+buat database bernama tokobaju di phpmyadmin
+import tokobaju.sql dari folder database di database tokobaju (phpmyadmin)
+
+di terminal 1 :
+cd backend
+composer install
+rename file .env.example di folder backend menjadi .env
+mkdir storage\framework\cache
+mkdir storage\framework\sessions
+mkdir storage\framework\views
+mkdir storage\logs
+lalu php artisan storage:link, jika gagal rmdir public\storage  lalu php artisan storage:link lagi
+php artisan serve
+
+di terminal 2:
+npm install
+npm run dev
