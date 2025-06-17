@@ -23,5 +23,6 @@ Di terminal 1:
 - php artisan serve
 
 Di terminal 2:
+- cd frontend
 - npm install
 - npm run dev
