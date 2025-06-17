@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Blinky-Star';
+  src: url('/fonts/BlinkyStar.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #FFF8E8;
+}
+
+#root {
+  min-height: 100vh;
+  background-color: #FFF8E8;
+}
